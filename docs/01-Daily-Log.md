@@ -1,8 +1,6 @@
-# Daily Log - Day 1
+# Daily Log - 
 
-
-## 📅 Date
-10 July 2026
+# Day 1 - 10 july 2026
 
 ## 🎯 Goal
 Set up the backend project and prepare the development environment.
@@ -38,3 +36,41 @@ Project foundation is ready. The development environment has been configured suc
 Approx. 15 - 20 mins.
 
 ---
+
+---
+
+# 🚀 Day 2 — 11 July 2026
+
+## 🎯 Goal
+Implement the authentication foundation for EduFlow backend.
+
+## ✅ Completed Tasks
+- Connected the application to MongoDB using Mongoose.
+- Created the database connection configuration.
+- Designed the `User` model with:
+  - Name
+  - Email
+  - Password
+  - Role (Student/Teacher/Admin)
+  - Avatar
+  - Enrolled Courses
+  - Timestamps
+- Implemented authentication controllers:
+  - Signup
+  - Login
+  - Logout
+- Added input validation using `validator`.
+- Checked for existing users before registration.
+- Hashed passwords using `bcryptjs`.
+- Generated JWT for authenticated users.
+- Stored JWT in an HTTP-only cookie.
+- Implemented secure login with password verification using `bcrypt.compare()`.
+
+
+## 🚧 Current Status
+The authentication backend is implemented. Signup, Login, and Logout controllers are complete. The next step is to protect routes and test all authentication endpoints.
+
+
+
+## ⏱️ Time Spent
+Approx. 2 hours.
