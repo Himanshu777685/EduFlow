@@ -2,6 +2,7 @@ import express from 'express'
 import dotenv from 'dotenv'
 import connectDB from './config/ConnectDB.js';
 import cookieParser from 'cookie-parser';
+import authRouter from './routes/authRoute.js';
 
 dotenv.config()
 
@@ -12,6 +13,8 @@ app.use(cookieParser);
 connectDB();
 
 const port = process.env.PORT;
+
+app.use("/api/auth" , authRouter);
 
 app.get('/', (req, res)=>{
     res.send("hello from server");
