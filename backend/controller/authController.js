@@ -4,8 +4,11 @@ import generateToken from "../config/generatToken.js";
 import validator from "validator"
 
 export const signup = async (req, res) => {
+
+    console.log("signup api called");
     try {
 
+        
         const { name, email, password, role } = req.body;
 
         // Validate input

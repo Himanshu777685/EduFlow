@@ -6,7 +6,7 @@ const isAuth = async (req, res, next) => {
         const { token } = req.cookies;
 
         if (!token) {
-            res.status(400).json({
+            return res.status(400).json({
                 success: false,
                 message: "user not registered"
             })
@@ -15,7 +15,7 @@ const isAuth = async (req, res, next) => {
         const verifyToken = await jwt.verify(token, process.env.JWT_SECRETE_KEY);
 
         if (!verifyToken) {
-            res.status(400).json({
+            return res.status(400).json({
                 success: false,
                 message: "user not registered"
             })
