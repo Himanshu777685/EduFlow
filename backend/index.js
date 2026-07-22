@@ -4,6 +4,7 @@ import connectDB from './config/ConnectDB.js';
 import cookieParser from 'cookie-parser';
 import authRouter from './routes/authRoute.js';
 import cors from 'cors';
+import userRouter from './routes/userRoute.js';
 
 dotenv.config()
 
@@ -22,6 +23,7 @@ app.use(cors({
 }))
 
 app.use("/api/auth" , authRouter);
+app.use("/api/user" , userRouter);
 
 app.get('/', (req, res)=>{
     res.send("hello from server");
@@ -30,3 +32,4 @@ app.get('/', (req, res)=>{
 app.listen(port , ()=>{
     console.log("server is running on port" , port)
 });
+

@@ -5,6 +5,9 @@ import axios from 'axios'
 import { serverURL } from '../App';
 import { toast } from 'react-toastify';
 import {ClipLoader} from 'react-spinners'
+import { useDispatch } from 'react-redux';
+import { setUserData } from '../redux/userSlice.js';
+
 
 const SignUp = () => {
 
@@ -17,6 +20,7 @@ const SignUp = () => {
   const [password , setPassword] = useState("");
   const [role , setRole] = useState('student');
   const [loading , setLoading] = useState(false);
+  const dispatch = useDispatch()
 
 
   const handleSignUp = async(e) => {
@@ -27,7 +31,7 @@ const SignUp = () => {
       const result = await axios.post(serverURL + "/api/auth/signup" , {name , email , role , password} , {withCredentials : true})
     
       setLoading(false)
-      console.log(result.data);
+      dispatch(setUserData(result.data))
       toast.success("SignUp successfully");
       navigate('/')
 

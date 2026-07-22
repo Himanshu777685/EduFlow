@@ -1,6 +1,6 @@
 # Daily Log - 
 
-# Day 1 - 10 july 2026
+# Day 1 
 
 ## 🎯 Goal
 Set up the backend project and prepare the development environment.
@@ -39,7 +39,7 @@ Approx. 15 - 20 mins.
 
 ---
 
-# 🚀 Day 2 — 11 July 2026
+# 🚀 Day 2 
 
 ## 🎯 Goal
 Implement the authentication foundation for EduFlow backend.
@@ -74,3 +74,93 @@ The authentication backend is implemented. Signup, Login, and Logout controllers
 
 ## ⏱️ Time Spent
 Approx. 2 hours.
+
+# Day 3 – Authentication UI & API Integration
+
+
+## 🚀 What I Built
+
+### Signup Page
+- Designed a responsive signup page using React and Tailwind CSS.
+- Added input fields for:
+  - Full Name
+  - Email
+  - Password
+  - Role (Student / Educator)
+- Implemented password show/hide functionality using React Icons.
+- Added loading spinner using `react-spinners`.
+- Connected the signup form with the backend using Axios.
+- Displayed success and error notifications using React Toastify.
+- Redirected users after successful signup.
+
+### Login Page
+- Designed a responsive login page with a consistent UI.
+- Implemented email and password authentication.
+- Connected the login form with the backend API.
+- Added loading state during authentication requests.
+- Displayed toast notifications for login success and failure.
+- Added navigation between Login and Signup pages.
+
+## 🐛 Debugging & Fixes
+- Fixed Express middleware issue caused by:
+  ```js
+  app.use(cookieParser);
+  ```
+  to
+  ```js
+  app.use(cookieParser());
+  ```
+- Resolved JWT configuration error:
+  ```
+  secretOrPrivateKey must have a value
+  ```
+  by correctly configuring environment variables.
+- Debugged API requests using browser DevTools (Network tab) and backend logs.
+- Improved frontend-backend authentication flow.
+
+## 📚 What I Learned
+- Building controlled forms in React.
+- Managing loading states with `useState`.
+- Making authenticated API requests using Axios and `withCredentials`.
+- Using React Toastify for user-friendly notifications.
+- Importance of Express middleware configuration.
+- Proper usage of environment variables for JWT authentication.
+- Practical debugging techniques for full-stack applications.
+
+
+# Day 4 – Redux Toolkit & Custom Hooks
+
+## 🚀 What I Learned
+
+### Redux Toolkit
+- Learned the purpose of global state management.
+- Understood how Redux solves prop drilling.
+- Explored the Redux architecture:
+  - Store
+  - Slice
+  - Actions
+  - Reducers
+  - Dispatch
+  - Selectors
+- Configured Redux Toolkit in the project.
+- Connected the Redux Store with the React application.
+- Learned how components read and update global state.
+
+### Custom Hooks
+- Learned how custom hooks help reuse logic across multiple components.
+- Understood that custom hooks share logic, not UI.
+- Created and used custom hooks following React conventions.
+- Improved component organization by separating business logic from UI.
+
+## 📚 Key Concepts
+- Difference between local state (`useState`) and global state (Redux).
+- Difference between Context API and Redux.
+- Reusing logic through custom hooks.
+- Writing cleaner and more scalable React applications.
+
+## 🚀 Progress
+- Completed authentication UI.
+- Integrated login and signup with the backend.
+- Configured Redux Toolkit for global state management.
+- Started using custom hooks to build a more maintainable project structure.
+- Continued moving the project toward a production-ready architecture.
