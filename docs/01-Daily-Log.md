@@ -164,3 +164,107 @@ Approx. 2 hours.
 - Configured Redux Toolkit for global state management.
 - Started using custom hooks to build a more maintainable project structure.
 - Continued moving the project toward a production-ready architecture.
+
+
+---
+
+# Day 5: Responsive Navbar UI Completion
+
+## Objective
+
+Complete the navigation bar and ensure a seamless experience across desktop, tablet, and mobile devices.
+
+## Tasks Performed
+
+* Designed and finalized the responsive navigation bar layout.
+* Implemented a mobile navigation menu for smaller screen sizes.
+* Improved the alignment and spacing of navigation links and UI components.
+* Enhanced the profile section with a cleaner avatar and dropdown interface.
+* Optimized responsiveness using Tailwind CSS breakpoints.
+* Fixed UI inconsistencies across different screen resolutions.
+
+## Key Outcome
+
+* A fully responsive and polished navigation bar that provides a consistent user experience on all supported devices.
+
+**Status:** ✅ Completed Successfully
+
+---
+
+# Day 6: Password Reset Backend Implementation
+
+## Objective
+
+Develop a secure backend workflow for users to reset their passwords through email verification.
+
+## Tasks Performed
+
+### Forgot Password Functionality
+
+* Created the **Forgot Password** API endpoint.
+* Validated user email before processing the request.
+* Generated a secure reset token using the Node.js `crypto` module.
+* Hashed the reset token before storing it in the database.
+* Configured a 15-minute expiration time for reset tokens.
+* Integrated email functionality to send password reset links.
+* Added proper error handling for invalid requests and email delivery failures.
+
+### Reset Password Functionality
+
+* Implemented the password reset API endpoint.
+* Verified the reset token by comparing its hashed value with the stored token.
+* Checked token expiration before allowing password updates.
+* Validated password and confirm password fields.
+* Encrypted the new password using `bcrypt`.
+* Cleared the reset token and expiration fields after a successful password update.
+
+## Security Features
+
+* Secure token generation using cryptographic random bytes.
+* Database stores only hashed reset tokens.
+* Time-limited reset links to prevent misuse.
+* One-time token usage by clearing reset credentials after success.
+
+## Key Outcome
+
+* Successfully completed a secure backend password reset system with token-based authentication and email verification.
+
+**Status:** ✅ Completed Successfully
+
+---
+
+# Day 7: Password Reset Frontend Implementation
+
+## Objective
+
+Develop the frontend interface for requesting and completing password resets.
+
+## Tasks Performed
+
+### Forgot Password Page
+
+* Designed the user interface for email submission.
+* Connected the page to the backend API using Axios.
+* Added loading indicators while processing requests.
+* Displayed success and error notifications using toast messages.
+
+### Reset Password Page
+
+* Created the interface for entering and confirming a new password.
+* Configured React Router to support dynamic reset password routes using URL parameters.
+* Retrieved the reset token from the URL.
+* Integrated the reset password API with the frontend.
+* Implemented client-side validation for password confirmation.
+* Displayed appropriate success and error messages based on API responses.
+
+### Testing & Integration
+
+* Verified communication between frontend and backend.
+* Tested the complete password reset workflow from email request to password update.
+* Confirmed successful redirection and user feedback after password reset.
+
+## Key Outcome
+
+* Successfully implemented and integrated the complete password reset feature, providing users with a smooth and secure password recovery experience.
+
+**Status:** ✅ Completed Successfully
