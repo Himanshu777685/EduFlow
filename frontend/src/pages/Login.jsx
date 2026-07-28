@@ -43,7 +43,7 @@ const Login = () => {
       backgroundImage:
         "url('signup-bg.jpg')",
     }}>
-      <div className="backdrop-blur-md bg-white/20 border border-white/30 rounded-2xl shadow-2xl p-6 sm:p-8  w-md md:w-[50%] lg:w-[40%]">
+      <div className="backdrop-blur-md bg-white/20 border border-white/30 overflow-scroll scrollbar-none rounded-2xl shadow-2xl p-6 sm:p-8 max-h-full w-md md:w-[50%] lg:w-[40%]">
 
         {/* Logo */}
         <div className="flex items-center justify-center gap-3 mb-8">
@@ -94,6 +94,10 @@ const Login = () => {
                 {show ? <LuEye size={18} /> : <LuEyeClosed size={18} />}
               </button>
             </div>
+          </div>
+
+          <div className='text-blue-600 text-sm bottom-2 hover:underline relative cursor-pointer' onClick={()=>navigate("/forget-password")} >
+            Forget Password
           </div>
 
           <div className="flex justify-center">

@@ -20,8 +20,8 @@ const userSchema = new mongoose.Schema(
       validate: [validator.isEmail, "Please enter a valid email"],
     },
 
-    description : {
-        type: String,
+    description: {
+      type: String,
 
     },
 
@@ -36,7 +36,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ["student", "educator"],
       default: "student",
-      required : true,
+      required: true,
     },
 
     avatar: {
@@ -44,9 +44,12 @@ const userSchema = new mongoose.Schema(
       default: "",
     },
 
-    enrolledCourses : [{
-      type : mongoose.Schema.Types.ObjectId,
-      ref : "Course"
+    resetPasswordToken: String,
+    resetPasswordExpire: Date,
+
+    enrolledCourses: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Course"
     }]
   },
   {
