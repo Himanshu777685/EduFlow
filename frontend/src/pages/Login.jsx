@@ -7,6 +7,9 @@ import { serverURL } from '../App';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { setUserData } from '../redux/userSlice.js';
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth, provider } from '../../utils/firebase.js';
+
 
 const Login = () => {
 
@@ -18,6 +21,33 @@ const Login = () => {
   const dispatch = useDispatch()
 
 
+  const GoogleLogin = async () => {
+
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const idToken = await result.user.getIdToken();
+
+      console.log(result)
+
+      const user = result.user;
+      const name = user.displayName;
+      const email = user.email;
+
+      const response = await axios.post(serverURL + "/api/auth/googleAuth", { name, email },
+        { withCredentials: true }
+      )
+
+      dispatch(setUserData(response.data))
+      toast.success("SignUp successfully");
+      navigate('/')
+
+    } catch (error) {
+      console.log("google signup error : " + error);
+      toast.error(error.response.data.message);
+    }
+  }
+
+
   const handleLogin = async (e) => {
     e.preventDefault()
     setLoading(true);
@@ -27,7 +57,7 @@ const Login = () => {
       setLoading(false);
       toast.success("Logged in successfully")
 
-      if(result){
+      if (result) {
         navigate('/');
       }
     } catch (error) {
@@ -96,7 +126,7 @@ const Login = () => {
             </div>
           </div>
 
-          <div className='text-blue-600 text-sm bottom-2 hover:underline relative cursor-pointer' onClick={()=>navigate("/forget-password")} >
+          <div className='text-blue-600 text-sm bottom-2 hover:underline relative cursor-pointer' onClick={() => navigate("/forget-password")} >
             Forget Password
           </div>
 
@@ -106,10 +136,10 @@ const Login = () => {
               className="w-fit px-10 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold transition duration-300"
               disabled={loading}
             >
-              {loading ? <ClipLoader size={30} color='white'/> : "Login"}
+              {loading ? <ClipLoader size={30} color='white' /> : "Login"}
             </button>
           </div>
-          
+
 
           <div className="flex items-center">
             <div className="grow h-px bg-gray-700"></div>
@@ -119,7 +149,8 @@ const Login = () => {
 
           <button
             type="button"
-            className="w-full flex items-center justify-center gap-3 py-3 rounded-xl border border-gray-300 bg-white/60 hover:bg-gray-100 transition"
+            className="w-full flex items-center justify-center gap-3 py-3 rounded-xl border border-gray-300 bg-white/60 hover:bg-gray-100 transition" 
+            onClick={GoogleLogin}
           >
             <img
               src="https://www.svgrepo.com/show/475656/google-color.svg"

@@ -243,7 +243,7 @@ export const forget_password = async (req, res) => {
             user.resetPasswordToken = undefined;
             user.resetPasswordExpire = undefined;
             await user.save();
-            
+
             return res.status(500).json({
                 success: false,
                 message: "Failed to send email."
@@ -264,11 +264,11 @@ export const forget_password = async (req, res) => {
     }
 }
 
-export const reset_password = async(req , res) =>{
+export const reset_password = async (req, res) => {
     try {
 
-        const {password} = req.body;
-        const {token} = req.params;
+        const { password } = req.body;
+        const { token } = req.params;
 
         const hashedToken = crypto
             .createHash("sha256")
@@ -312,5 +312,52 @@ export const reset_password = async(req , res) =>{
             message: "Internal server error"
         });
 
+    }
+}
+
+export const googleAuth = async (req, res) => {
+    try {
+        const { name, email, role } = req.body;
+
+        let user = await User.findOne({ email });
+
+        if (!user) {
+            user = await User.create({
+                name,
+                email,
+                role
+            })
+        }
+
+        // Generate JWT
+
+        const token = generateToken(user._id);
+
+        // Set cookie
+
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: false,
+            sameSite: "Strict",
+            maxAge: 7 * 24 * 60 * 60 * 1000
+        })
+
+        return res.status(201).json({
+            success: true,
+            message: "User registered successfully.",
+            user: {
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+            },
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: `Error in goggleAuth error :  ${error}`,
+        });
     }
 }

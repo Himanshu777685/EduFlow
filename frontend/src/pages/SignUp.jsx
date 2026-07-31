@@ -4,9 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios'
 import { serverURL } from '../App';
 import { toast } from 'react-toastify';
-import {ClipLoader} from 'react-spinners'
+import { ClipLoader } from 'react-spinners'
 import { useDispatch } from 'react-redux';
 import { setUserData } from '../redux/userSlice.js';
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth, provider } from '../../utils/firebase.js';
 
 
 const SignUp = () => {
@@ -15,21 +17,52 @@ const SignUp = () => {
 
   const navigate = useNavigate();
 
-  const [name , setName] = useState("");
-  const [email , setEmail] = useState("");
-  const [password , setPassword] = useState("");
-  const [role , setRole] = useState('student');
-  const [loading , setLoading] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState('student');
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch()
 
 
-  const handleSignUp = async(e) => {
+
+
+  const GoogleLogin = async () => {
+
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const idToken = await result.user.getIdToken();
+
+      console.log(result)
+
+      const user = result.user;
+      const name = user.displayName;
+      const email = user.email;
+
+      const response = await axios.post(serverURL + "/api/auth/googleAuth" , {name , email , role } ,
+        {withCredentials : true}
+      )
+
+      dispatch(setUserData(response.data))
+      toast.success("SignUp successfully");
+      navigate('/')
+
+    } catch (error) {
+      console.log("google signup error : " + error);
+      toast.error(error.response.data.message);
+    }
+  }
+
+
+
+
+  const handleSignUp = async (e) => {
     e.preventDefault();
     setLoading(true)
     try {
-      
-      const result = await axios.post(serverURL + "/api/auth/signup" , {name , email , role , password} , {withCredentials : true})
-    
+
+      const result = await axios.post(serverURL + "/api/auth/signup", { name, email, role, password }, { withCredentials: true })
+
       setLoading(false)
       dispatch(setUserData(result.data))
       toast.success("SignUp successfully");
@@ -42,7 +75,7 @@ const SignUp = () => {
     }
   }
 
-  
+
 
   return (
     <div className='flex w-full h-screen items-center justify-center bg-cover bg-center px-4 sm:px-6' style={{
@@ -71,11 +104,11 @@ const SignUp = () => {
             </label>
 
             <input
-            id = 'name'
+              id='name'
               type="text"
               placeholder="Enter your full name"
               className="w-full px-4 py-3 rounded-xl   bg-white/30 focus:outline-none "
-              onChange={(e)=>setName(e.target.value)} value = {name}
+              onChange={(e) => setName(e.target.value)} value={name}
             />
           </div>
 
@@ -85,19 +118,19 @@ const SignUp = () => {
             </label>
 
             <input
-            id='email'
+              id='email'
               type="email"
               placeholder="Enter your email"
               className="w-full px-4 py-3 rounded-xl   bg-white/30 focus:outline-none "
-              onChange={(e)=>setEmail(e.target.value)} value={email}
+              onChange={(e) => setEmail(e.target.value)} value={email}
             />
           </div>
 
           <div className='flex justify-around'>
             <button type="button"
-              className={`items-center justify-center py-3 px-4 rounded-2xl border border-gray-300  hover:border-2 hover:border-indigo-700 transition ${role === 'educator' ? "bg-indigo-300" : "bg-white/60"  }`} onClick={()=>setRole('educator')}>Educator</button>
+              className={`items-center justify-center py-3 px-4 rounded-2xl border border-gray-300  hover:border-2 hover:border-indigo-700 transition ${role === 'educator' ? "bg-indigo-300" : "bg-white/60"}`} onClick={() => setRole('educator')}>Educator</button>
             <button type="button"
-              className={`items-center justify-center py-3 px-4 rounded-2xl border border-gray-300  hover:border-2 hover:border-indigo-700 transition ${role === 'student' ? "bg-indigo-300" : "bg-white/60"  } `} onClick={()=>setRole('student')}>Student</button>
+              className={`items-center justify-center py-3 px-4 rounded-2xl border border-gray-300  hover:border-2 hover:border-indigo-700 transition ${role === 'student' ? "bg-indigo-300" : "bg-white/60"} `} onClick={() => setRole('student')}>Student</button>
 
           </div>
 
@@ -108,11 +141,11 @@ const SignUp = () => {
 
             <div className='relative'>
               <input
-              id='password'
+                id='password'
                 type={show ? "text" : "password"}
                 placeholder="Create a password"
                 className="w-full px-4 py-3 rounded-xl   bg-white/30 focus:outline-none "
-                onChange={(e)=>setPassword(e.target.value)} value={password}
+                onChange={(e) => setPassword(e.target.value)} value={password}
               />
               <button
                 type='button'
@@ -128,7 +161,7 @@ const SignUp = () => {
             <button
               type="submit"
               className="w-fit px-10 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold transition duration-300"
-              disabled = {loading}
+              disabled={loading}
             >
               {loading ? <ClipLoader size={30} color='white' /> : "SignUp"}
             </button>
@@ -143,7 +176,8 @@ const SignUp = () => {
           <button
             type="button"
             className="w-full flex items-center justify-center gap-3 py-3 rounded-xl border border-gray-300 bg-white/60 hover:bg-gray-100 transition"
-          >
+            onClick={GoogleLogin} 
+            >
             <img
               src="https://www.svgrepo.com/show/475656/google-color.svg"
               alt="Google"
@@ -155,9 +189,9 @@ const SignUp = () => {
 
           <p className="text-center text-sm text-amber-50">
             Already have an account?{" "}
-            <span 
-            className="text-cyan-400 hover:underline cursor-pointer font-semibold"
-            onClick={()=>navigate('/login')}
+            <span
+              className="text-cyan-400 hover:underline cursor-pointer font-semibold"
+              onClick={() => navigate('/login')}
             >
               Login
             </span>
