@@ -7,8 +7,12 @@ import {
   BarChart3,
   Clock3,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Hero = () => {
+
+    const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 overflow-hidden">
       
@@ -58,7 +62,7 @@ const Hero = () => {
               {/* CTA */}
               <div className="flex flex-wrap items-center gap-4 mt-8">
 
-                <button className="group flex items-center gap-2 px-6 py-3.5 rounded-xl bg-indigo-600 text-white font-medium shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition">
+                <button className="group flex items-center gap-2 px-6 py-3.5 rounded-xl bg-indigo-600 text-white font-medium shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition" onClick={()=>navigate("/courses")}>
                   Explore Courses
 
                   <ArrowRight
@@ -68,7 +72,7 @@ const Hero = () => {
                 </button>
 
 
-                <button className="flex items-center gap-2 px-6 py-3.5 rounded-xl border border-slate-200 bg-white text-slate-700 font-medium hover:border-indigo-200 hover:text-indigo-600 transition">
+                <button className="flex items-center gap-2 px-6 py-3.5 rounded-xl border border-slate-200 bg-white text-slate-700 font-medium hover:border-indigo-200 hover:text-indigo-600 transition" onClick={()=>navigate("/about")}>
                   <Play size={16} fill="currentColor" />
                   How it works
                 </button>

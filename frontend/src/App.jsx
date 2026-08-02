@@ -10,6 +10,8 @@ import { useSelector } from 'react-redux'
 import Profile from './pages/Profile'
 import ForgetPassword from './pages/ForgetPassword'
 import ResetPassword from './pages/ResetPassword'
+import Courses from './pages/Courses'
+import About from './pages/About'
 
 
 const App = () => {
@@ -26,6 +28,8 @@ const App = () => {
         <Route path='/forget-password' element= {<ForgetPassword/>} />
         <Route path='/reset-password/:token' element= {<ResetPassword/>} />
         <Route path='/profile' element= {userData ? <Profile/> : <Navigate to={"/signup"}/>} />
+        <Route path='/courses' element= {<Courses />} />
+        <Route path='/about' element= {<About />} />
       </Routes>
     </>
   )
