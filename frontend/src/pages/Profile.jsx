@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from 'axios';
+import { toast } from "react-toastify";
 import { serverURL } from "../App";
 import { VscLoading } from "react-icons/vsc";
 import { IoArrowBack } from "react-icons/io5";
@@ -91,11 +92,13 @@ const Profile = () => {
 
         setEditProfile(false);
         setEditAbout(false);
+        toast.success("Profile updated")
       }
 
 
     } catch (error) {
       console.log("Profile update error:", error);
+      toast.error(error.response.data.message);
     } finally {
       setLoading(false);
     }
