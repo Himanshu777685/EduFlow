@@ -12,6 +12,9 @@ import ForgetPassword from './pages/ForgetPassword'
 import ResetPassword from './pages/ResetPassword'
 import Courses from './pages/Courses'
 import About from './pages/About'
+import EducatorDashboard from './pages/EducatorDashboard'
+import CreatorCourses from './pages/CreatorCourses'
+import CreateCourses from './pages/CreateCourses'
 
 
 const App = () => {
@@ -30,6 +33,9 @@ const App = () => {
         <Route path='/profile' element= {userData ? <Profile/> : <Navigate to={"/signup"}/>} />
         <Route path='/courses' element= {<Courses />} />
         <Route path='/about' element= {<About />} />
+        <Route path='/dashboard' element= {userData?.user?.role ? <EducatorDashboard/> : <Navigate to={"/signup"}/>}/>
+        <Route path='/creator-courses' element= {userData?.user?.role ? <CreatorCourses/> : <Navigate to={"/signup"}/>}/>
+        <Route path='/create-courses' element= {userData?.user?.role ? <CreateCourses/> : <Navigate to={"/signup"}/>}/>
       </Routes>
     </>
   )

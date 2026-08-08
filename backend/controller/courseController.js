@@ -1,11 +1,11 @@
-import uploadOnCloudinary from "../config/cloudinary";
+import uploadOnCloudinary from "../config/cloudinary.js";
 import Course from "../models/courseModel.js";
 import User from "../models/userModel.js";
 
 export const CreateCourse = async (req, res) => {
     try {
         const creator_id = req.userId;
-        const { title, category, description, subTitle, level } = req.body;
+        const { title, category, description, subTitle, level , price} = req.body;
 
         const user = await User.findById(creator_id).select("-password");
 
@@ -30,6 +30,7 @@ export const CreateCourse = async (req, res) => {
             subTitle,
             thumbnail,
             level,
+            price,
             creator: creator_id
         })
 

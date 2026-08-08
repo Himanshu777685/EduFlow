@@ -85,7 +85,8 @@ const Nav = () => {
                     className='
                         flex items-center gap-2
                         text-sm font-medium
-                        text-indigo-600
+                        text-slate-600
+                        hover:text-indigo-600
                         cursor-pointer
                         transition
                     '
