@@ -342,7 +342,7 @@ const CreateCourses = () => {
                             <input
                                 id="thumbnail"
                                 type="file"
-                                accept="image/png,image/jpeg,image/jpg"
+                                accept="image/*"
                                 onChange={handleThumbnail}
                                 className="hidden"
                             />

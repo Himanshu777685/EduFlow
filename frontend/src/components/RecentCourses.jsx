@@ -1,39 +1,46 @@
 import React from "react";
 import { MoreHorizontal, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-const courses = [
-  {
-    title: "React.js - Complete Guide",
-    description: "Learn React from basics to advanced concepts with practical projects.",
-    status: "Published",
-    students: 125,
-    price: "₹1,999",
-    image: "https://placehold.co/96x72/111827/61dafb?text=React",
-  },
-  {
-    title: "Node.js & Express.js",
-    description: "Master backend development with Node.js, Express and MongoDB.",
-    status: "Unpublished",
-    students: 0,
-    price: "₹1,499",
-    image: "https://placehold.co/96x72/1f2937/84cc16?text=Node",
-  },
-  {
-    title: "Python for Data Science",
-    description: "Data analysis, visualization and machine learning using Python.",
-    status: "Published",
-    students: 320,
-    price: "₹2,499",
-    image: "https://placehold.co/96x72/1e293b/facc15?text=Python",
-  },
-];
+// const courses = [
+//   {
+//     title: "React.js - Complete Guide",
+//     description: "Learn React from basics to advanced concepts with practical projects.",
+//     status: "Published",
+//     students: 125,
+//     price: "₹1,999",
+//     image: "https://placehold.co/96x72/111827/61dafb?text=React",
+//   },
+//   {
+//     title: "Node.js & Express.js",
+//     description: "Master backend development with Node.js, Express and MongoDB.",
+//     status: "Unpublished",
+//     students: 0,
+//     price: "₹1,499",
+//     image: "https://placehold.co/96x72/1f2937/84cc16?text=Node",
+//   },
+//   {
+//     title: "Python for Data Science",
+//     description: "Data analysis, visualization and machine learning using Python.",
+//     status: "Published",
+//     students: 320,
+//     price: "₹2,499",
+//     image: "https://placehold.co/96x72/1e293b/facc15?text=Python",
+//   },
+// ];
 
 
 
 const RecentCourses = ({ search }) => {
+
+  const { creatorCourses } = useSelector(state => state.course);
+
+  const courses = creatorCourses?.slice(0, 4);
+
+
   const filteredCourses = courses.filter((course) =>
-    course.title.toLowerCase().includes(search.toLowerCase())
+    course.title.toLowerCase().includes(search?.toLowerCase())
   );
 
   const navigate = useNavigate()
@@ -47,19 +54,19 @@ const RecentCourses = ({ search }) => {
           </p>
         </div>
 
-        <button className="text-sm font-semibold cursor-pointer text-violet-600 hover:text-violet-700" onClick={()=>navigate("/creator-courses")}>
+        <button className="text-sm font-semibold cursor-pointer text-violet-600 hover:text-violet-700" onClick={() => navigate("/creator-courses")}>
           View all
         </button>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-3 shadow-lg">
         {filteredCourses.map((course) => (
           <div
             key={course.title}
             className="group flex items-center gap-4 rounded-xl border border-slate-100 p-3 transition hover:border-violet-200 hover:bg-violet-50/30"
           >
             <img
-              src={course.image}
+              src={course.thumbnail}
               alt={course.title}
               className="h-16 w-20 rounded-lg object-cover"
             />
@@ -75,20 +82,19 @@ const RecentCourses = ({ search }) => {
 
               <div className="mt-2 flex flex-wrap items-center gap-2 text-xs">
                 <span
-                  className={`rounded-full px-2 py-1 font-medium ${
-                    course.status === "Published"
+                  className={`rounded-full px-2 py-1 font-medium ${course?.isPublished
                       ? "bg-emerald-50 text-emerald-600"
                       : "bg-amber-50 text-amber-600"
-                  }`}
+                    }`}
                 >
-                  {course.status}
+                  {course?.isPublished ? "Published" : "Draft"}
                 </span>
 
                 <span className="text-slate-500">
-                  {course.students} Students
+                  {course?.enrolledStudents?.length || 0} Students
                 </span>
 
-                <span className="text-slate-500">{course.price}</span>
+                <span className="text-slate-500">{course?.price || "Free"}</span>
               </div>
             </div>
 

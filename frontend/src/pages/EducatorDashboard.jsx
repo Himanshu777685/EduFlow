@@ -7,15 +7,16 @@ import OverviewChart from "../components/OverviewChart";
 import Nav from "../components/Nav";
 import { Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import CoursePerformance from "../components/CoursePerformance";
 
 const EducatorDashboard = () => {
     const [search, setSearch] = useState("");
     const navigate = useNavigate();
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-slate-50 text-slate-800">
+        <div className="min-h-screen lg:min-w-screen flex items-center justify-center bg-slate-50 text-slate-800">
             <Nav />
-            <div className=" pt-16 mx-5 min-h-screen">
+            <div className="w-full max-w-6xl mx-auto px-6 min-h-screen pt-20">
 
                 <main className="p-4 sm:p-6  lg:p-8">
                     <div className="flex items-center justify-between">
@@ -36,9 +37,9 @@ const EducatorDashboard = () => {
 
                     <StatsCards />
 
-                    <div className="mt-6 grid grid-cols-1 xl:grid-cols-2 gap-6">
+                    <div className="mt-6 grid grid-cols-1 xl:grid-cols-2 gap-6 md:min-h-100">
                         <RecentCourses search={search} />
-                        <OverviewChart />
+                        <CoursePerformance />
                     </div>
                 </main>
             </div>

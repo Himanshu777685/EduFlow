@@ -1,42 +1,61 @@
 import React from "react";
 import { BookOpen, GraduationCap, Users, IndianRupee } from "lucide-react";
+import { useSelector } from "react-redux";
 
-const stats = [
-  {
-    title: "Total Courses",
-    value: "12",
-    change: "+2 new this month",
-    icon: BookOpen,
-    iconBg: "bg-violet-100",
-    iconColor: "text-violet-600",
-  },
-  {
-    title: "Published Courses",
-    value: "8",
-    change: "+1 new this month",
-    icon: GraduationCap,
-    iconBg: "bg-emerald-100",
-    iconColor: "text-emerald-600",
-  },
-  {
-    title: "Total Students",
-    value: "1,248",
-    change: "+120 this month",
-    icon: Users,
-    iconBg: "bg-blue-100",
-    iconColor: "text-blue-600",
-  },
-  {
-    title: "Total Revenue",
-    value: "₹48,540",
-    change: "+12% this month",
-    icon: IndianRupee,
-    iconBg: "bg-amber-100",
-    iconColor: "text-amber-600",
-  },
-];
+
 
 const StatsCards = () => {
+
+  const { creatorCourses } = useSelector(state => state.course)
+  console.log("from stats card : ")
+  console.log(creatorCourses);
+
+  const publishedCourses = creatorCourses?.filter(
+    (course) => course.isPublished
+  )?.length || 0;
+
+  const totalStudents = creatorCourses.reduce(
+    (total, course) => total + course.enrolledStudents?.length,
+    0
+  );
+
+  const totalRevenue = creatorCourses.reduce(
+    (total, course) =>
+        total +( course.price||0) *( course.enrolledStudents?.length || 0),
+    0
+);
+
+  const stats = [
+    {
+      title: "Total Courses",
+      value: creatorCourses?.length,
+      icon: BookOpen,
+      iconBg: "bg-violet-100",
+      iconColor: "text-violet-600",
+    },
+    {
+      title: "Published Courses",
+      value: publishedCourses,
+      icon: GraduationCap,
+      iconBg: "bg-emerald-100",
+      iconColor: "text-emerald-600",
+    },
+    {
+      title: "Total Students",
+      value: totalStudents || 0,
+      icon: Users,
+      iconBg: "bg-blue-100",
+      iconColor: "text-blue-600",
+    },
+    {
+      title: "Total Revenue",
+      value: `₹${totalRevenue}`,
+      icon: IndianRupee,
+      iconBg: "bg-amber-100",
+      iconColor: "text-amber-600",
+    },
+  ];
+
   return (
     <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
       {stats.map((stat) => {
@@ -64,9 +83,6 @@ const StatsCards = () => {
               </div>
             </div>
 
-            <p className="mt-4 text-xs font-medium text-emerald-600">
-              ↗ {stat.change}
-            </p>
           </div>
         );
       })}

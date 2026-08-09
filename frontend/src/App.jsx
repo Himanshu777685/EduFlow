@@ -15,11 +15,15 @@ import About from './pages/About'
 import EducatorDashboard from './pages/EducatorDashboard'
 import CreatorCourses from './pages/CreatorCourses'
 import CreateCourses from './pages/CreateCourses'
+import getAllCourses from './customHooks/getAllCourses'
+import getCreatorCourses from './customHooks/getCreatorCourses'
 
 
 const App = () => {
 
-  getCurrentUser()
+  getAllCourses();
+  getCreatorCourses();
+  getCurrentUser();
   const {userData} = useSelector(state=>state.user)
   return (
     <>
