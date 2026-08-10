@@ -209,3 +209,59 @@ export const UnPublishCourse = async (req, res) => {
         })
     }
 }
+
+
+export const getCourseByIdForCreator = async (req, res) => {
+    try {
+        const { courseId } = req.params;
+        const userId = req.userId;
+
+        // Check user
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        // Only educator can access
+        if (user.role !== "educator") {
+            return res.status(403).json({
+                success: false,
+                message: "Only educators are allowed"
+            });
+        }
+
+        // Find course
+        const course = await Course.findById(courseId);
+
+        if (!course) {
+            return res.status(404).json({
+                success: false,
+                message: "Course not found"
+            });
+        }
+
+        // Check course ownership
+        if (course.creator.toString() !== userId.toString()) {
+            return res.status(403).json({
+                success: false,
+                message: "You are not authorized to access this course"
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Course fetched successfully",
+            course
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: `Get course error: ${error.message}`
+        });
+    }
+};

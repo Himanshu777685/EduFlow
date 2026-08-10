@@ -16,6 +16,9 @@ import { useNavigate } from "react-router-dom";
 const CreatorCourses = () => {
     const [search, setSearch] = useState("");
     const [status, setStatus] = useState("All");
+    
+    const navigate = useNavigate();
+
 
     const { creatorCourses } = useSelector(state => state.course);
     console.log("from creator page :");
@@ -47,7 +50,6 @@ const CreatorCourses = () => {
         (course) => !(course.isPublished)
     ).length;
 
-    const navigate = useNavigate();
 
     return (
         <div className="min-h-screen bg-gray-50 p-5 sm:p-6 lg:p-8">
@@ -217,9 +219,6 @@ const CreatorCourses = () => {
                                 </span>
 
                                 {/* More */}
-                                <button className="absolute top-3 right-3 w-9 h-9 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-lg text-gray-600 hover:text-gray-900">
-                                    <FiMoreVertical size={18} />
-                                </button>
 
                             </div>
 
@@ -265,9 +264,9 @@ const CreatorCourses = () => {
                                 {/* Actions */}
                                 <div className="flex items-center gap-2 mt-5 pt-4 border-t border-gray-100">
 
-                                    <button className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition">
+                                    <button className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition cursor-pointer" onClick={()=>navigate(`/courseforeducator/${course._id}`)}>
                                         <FiEdit2 size={15} />
-                                        Edit
+                                        Open course
                                     </button>
 
                                     <button className="w-10 h-10 flex items-center justify-center border border-gray-200 rounded-lg text-gray-500 hover:text-red-600 hover:border-red-200 transition">

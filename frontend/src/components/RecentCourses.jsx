@@ -3,34 +3,6 @@ import { MoreHorizontal, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-// const courses = [
-//   {
-//     title: "React.js - Complete Guide",
-//     description: "Learn React from basics to advanced concepts with practical projects.",
-//     status: "Published",
-//     students: 125,
-//     price: "₹1,999",
-//     image: "https://placehold.co/96x72/111827/61dafb?text=React",
-//   },
-//   {
-//     title: "Node.js & Express.js",
-//     description: "Master backend development with Node.js, Express and MongoDB.",
-//     status: "Unpublished",
-//     students: 0,
-//     price: "₹1,499",
-//     image: "https://placehold.co/96x72/1f2937/84cc16?text=Node",
-//   },
-//   {
-//     title: "Python for Data Science",
-//     description: "Data analysis, visualization and machine learning using Python.",
-//     status: "Published",
-//     students: 320,
-//     price: "₹2,499",
-//     image: "https://placehold.co/96x72/1e293b/facc15?text=Python",
-//   },
-// ];
-
-
 
 const RecentCourses = ({ search }) => {
 
@@ -63,7 +35,8 @@ const RecentCourses = ({ search }) => {
         {filteredCourses.map((course) => (
           <div
             key={course.title}
-            className="group flex items-center gap-4 rounded-xl border border-slate-100 p-3 transition hover:border-violet-200 hover:bg-violet-50/30"
+            className="group flex items-center gap-4 rounded-xl border border-slate-100 p-3 transition hover:border-violet-200 hover:bg-violet-50/30 cursor-pointer"
+            onClick={()=>navigate(`/courseforeducator/${course._id}`)}
           >
             <img
               src={course.thumbnail}
@@ -98,7 +71,7 @@ const RecentCourses = ({ search }) => {
               </div>
             </div>
 
-            <button className="rounded-lg border border-slate-200 p-2 text-slate-500 opacity-70 transition hover:bg-white hover:text-slate-800 group-hover:opacity-100">
+            <button className="rounded-lg border border-slate-200 p-2 text-slate-500 opacity-70 transition hover:bg-white hover:text-slate-800 group-hover:opacity-100 cursor-pointer " onClick={()=>navigate(`/courseforeducator/${course._id}`)}>
               <MoreHorizontal size={18} />
             </button>
           </div>
