@@ -49,7 +49,7 @@ export const CreateCourse = async (req, res) => {
 
 export const getPublishedCourse = async (req, res) => {
     try {
-        const course = await Course.find({ isPublished: true })
+        const course = await Course.find({ isPublished: true }).populate("creator" , "name email avatar")
 
         if (course.length == 0) {
             return res.status(400).json({

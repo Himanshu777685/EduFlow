@@ -2,6 +2,8 @@ import React from "react";
 import { FiClock, FiBookOpen, FiStar } from "react-icons/fi";
 
 const CourseCard = ({ course }) => {
+
+
     return (
         <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-lg transition-all shadow-lg duration-300 group">
 
@@ -34,14 +36,28 @@ const CourseCard = ({ course }) => {
 
                 {/* Instructor */}
                 <div className="flex items-center gap-2 mt-4">
-                    <img
-                        src={course.instructorImage}
-                        alt={course.instructor}
+                    {course.creator.avatar ? <img
+                        src={course.creator.avatar}
+                        alt={course.creator.name}
                         className="w-8 h-8 rounded-full object-cover"
-                    />
+                    /> :
+                    <div className='
+                                        w-9 h-9
+                                        rounded-full
+                                        border-2 border-indigo-100
+                                        flex items-center justify-center
+                                        bg-indigo-600
+                                        text-white
+                                        font-bold
+                                        text-lg
+                                    '>
+                                        {course?.creator?.name
+                                            ?.slice(0, 1)
+                                            .toUpperCase()}
+                                    </div>}
 
                     <span className="text-sm text-gray-600">
-                        {course.instructor}
+                        {course.creator.name}
                     </span>
                 </div>
 
@@ -50,18 +66,18 @@ const CourseCard = ({ course }) => {
 
                     <div className="flex items-center gap-1">
                         <FiBookOpen size={15} />
-                        <span>{course.lessons} Lessons</span>
+                        <span>{course.lectures?.length} Lessons</span>
                     </div>
 
-                    <div className="flex items-center gap-1">
+                    {/* <div className="flex items-center gap-1">
                         <FiClock size={15} />
                         <span>{course.duration}</span>
-                    </div>
+                    </div> */}
 
                 </div>
 
                 {/* Rating */}
-                <div className="flex items-center gap-1 mt-3">
+                {/* <div className="flex items-center gap-1 mt-3">
                     <FiStar
                         size={16}
                         className="text-yellow-500 fill-yellow-500"
@@ -74,14 +90,15 @@ const CourseCard = ({ course }) => {
                     <span className="text-sm text-gray-400">
                         ({course.reviews})
                     </span>
-                </div>
+                </div> */}
 
                 {/* Bottom */}
                 <div className="flex items-center justify-between mt-5 pt-4 border-t border-gray-100">
 
                     <div>
                         <span className="text-xl font-bold text-gray-900">
-                            ₹{course.price}
+                            {course.price ?` ₹${course.price}` : "Free"}
+            
                         </span>
                     </div>
 

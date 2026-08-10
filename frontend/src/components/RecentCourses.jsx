@@ -94,7 +94,7 @@ const RecentCourses = ({ search }) => {
                   {course?.enrolledStudents?.length || 0} Students
                 </span>
 
-                <span className="text-slate-500">{course?.price || "Free"}</span>
+                <span className="text-slate-500">{`₹${course?.price }`|| "Free"}</span>
               </div>
             </div>
 

@@ -2,83 +2,87 @@ import React, { useState } from "react";
 import { FiSearch, FiFilter } from "react-icons/fi";
 import CourseCard from "../components/CourseCard";
 import Nav from "../components/Nav";
+import { useSelector } from "react-redux";
 
 const Courses = () => {
 
   const [search, setSearch] = useState("");
 
-  const courses = [
-    {
-      id: 1,
-      title: "Complete React Development",
-      description:
-        "Learn React from fundamentals to advanced concepts and build real-world applications.",
-      category: "Development",
-      instructor: "Himanshu Kumar",
-      instructorImage:
-        "https://i.pravatar.cc/100?img=12",
-      thumbnail:
-        "https://images.unsplash.com/photo-1633356122544-f134324a6cee",
-      lessons: 42,
-      duration: "12h 30m",
-      rating: 4.8,
-      reviews: 124,
-      price: 499
-    },
-    {
-      id: 2,
-      title: "Data Structures & Algorithms",
-      description:
-        "Master DSA concepts and improve your problem-solving skills with practical problems.",
-      category: "Programming",
-      instructor: "Alex Johnson",
-      instructorImage:
-        "https://i.pravatar.cc/100?img=11",
-      thumbnail:
-        "https://images.unsplash.com/photo-1516116216624-53e697fedbea",
-      lessons: 58,
-      duration: "18h 20m",
-      rating: 4.9,
-      reviews: 218,
-      price: 599
-    },
-    {
-      id: 3,
-      title: "Node.js & Express Backend",
-      description:
-        "Build scalable backend applications using Node.js, Express, MongoDB and REST APIs.",
-      category: "Backend",
-      instructor: "Sarah Williams",
-      instructorImage:
-        "https://i.pravatar.cc/100?img=32",
-      thumbnail:
-        "https://images.unsplash.com/photo-1555066931-4365d14bab8c",
-      lessons: 36,
-      duration: "10h 45m",
-      rating: 4.7,
-      reviews: 96,
-      price: 449
-    },
-    {
-      id: 4,
-      title: "MongoDB & Database Design",
-      description:
-        "Understand MongoDB, database architecture, schemas, queries and real-world applications.",
-      category: "Database",
-      instructor: "David Smith",
-      instructorImage:
-        "https://i.pravatar.cc/100?img=13",
-      thumbnail:
-        "https://images.unsplash.com/photo-1544383835-bda2bc66a55d",
-      lessons: 28,
-      duration: "8h 15m",
-      rating: 4.6,
-      reviews: 74,
-      price: 399
-    }
-  ];
+  const {allCourses} = useSelector(state=>state.course);
+  console.log("from courses: ");
+  console.log(allCourses)
+  // const courses = [
+  //   {
+  //     id: 1,
+  //     title: "Complete React Development",
+  //     description:
+  //       "Learn React from fundamentals to advanced concepts and build real-world applications.",
+  //     category: "Development",
+  //     instructor: "Himanshu Kumar",
+  //     instructorImage:
+  //       "https://i.pravatar.cc/100?img=12",
+  //     thumbnail:
+  //       "https://images.unsplash.com/photo-1633356122544-f134324a6cee",
+  //     lessons: 42,
+  //     duration: "12h 30m",
+  //     rating: 4.8,
+  //     reviews: 124,
+  //     price: 499
+  //   },
+  //   {
+  //     id: 2,
+  //     title: "Data Structures & Algorithms",
+  //     description:
+  //       "Master DSA concepts and improve your problem-solving skills with practical problems.",
+  //     category: "Programming",
+  //     instructor: "Alex Johnson",
+  //     instructorImage:
+  //       "https://i.pravatar.cc/100?img=11",
+  //     thumbnail:
+  //       "https://images.unsplash.com/photo-1516116216624-53e697fedbea",
+  //     lessons: 58,
+  //     duration: "18h 20m",
+  //     rating: 4.9,
+  //     reviews: 218,
+  //     price: 599
+  //   },
+  //   {
+  //     id: 3,
+  //     title: "Node.js & Express Backend",
+  //     description:
+  //       "Build scalable backend applications using Node.js, Express, MongoDB and REST APIs.",
+  //     category: "Backend",
+  //     instructor: "Sarah Williams",
+  //     instructorImage:
+  //       "https://i.pravatar.cc/100?img=32",
+  //     thumbnail:
+  //       "https://images.unsplash.com/photo-1555066931-4365d14bab8c",
+  //     lessons: 36,
+  //     duration: "10h 45m",
+  //     rating: 4.7,
+  //     reviews: 96,
+  //     price: 449
+  //   },
+  //   {
+  //     id: 4,
+  //     title: "MongoDB & Database Design",
+  //     description:
+  //       "Understand MongoDB, database architecture, schemas, queries and real-world applications.",
+  //     category: "Database",
+  //     instructor: "David Smith",
+  //     instructorImage:
+  //       "https://i.pravatar.cc/100?img=13",
+  //     thumbnail:
+  //       "https://images.unsplash.com/photo-1544383835-bda2bc66a55d",
+  //     lessons: 28,
+  //     duration: "8h 15m",
+  //     rating: 4.6,
+  //     reviews: 74,
+  //     price: 399
+  //   }
+  // ];
 
-  const filteredCourses = courses.filter((course) =>
+  const filteredCourses = allCourses.filter((course) =>
     course.title.toLowerCase().includes(search.toLowerCase())
   );
 
@@ -174,7 +178,7 @@ const Courses = () => {
 
           {filteredCourses.map((course) => (
             <CourseCard
-              key={course.id}
+              key={course._id}
               course={course}
             />
           ))}
