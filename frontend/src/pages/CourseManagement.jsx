@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import {
@@ -17,11 +17,13 @@ import {
 
 import getCourseforEducator from "../customHooks/getCourseforEducator";
 import { useEffect } from "react";
+import axios from "axios";
+import { serverURL } from "../App";
 
 const CourseManagement = () => {
-    
+
     const { courseId } = useParams();
-    console.log(courseId)
+
     const navigate = useNavigate();
 
     const {
@@ -31,8 +33,15 @@ const CourseManagement = () => {
     } = getCourseforEducator({ courseId });
 
 
+    const [isPublished, setIsPublished] = useState(false)
+
+
+
     useEffect(() => {
         console.log("Course in component:", course);
+        if(course){
+            setIsPublished(course.isPublished || false)
+        }
     }, [course]);
 
 
@@ -97,6 +106,30 @@ const CourseManagement = () => {
     const revenue =
         (course.price || 0) * studentCount;
 
+    
+
+    const handlePublish = async () => {
+        try {
+            if (!isPublished) {
+                await axios.put(`${serverURL}/api/course/publishCourse/${courseId}`,
+                    {},
+                    { withCredentials: true }
+                )
+
+
+                setIsPublished(true);
+            } else {
+                await axios.put(`${serverURL}/api/course/unPublishCourse/${courseId}`,
+                    {},
+                    { withCredentials: true }
+                )
+
+                setIsPublished(false)
+            }
+        } catch (error) {
+
+        }
+    }
 
     return (
 
@@ -108,7 +141,7 @@ const CourseManagement = () => {
                 {/* BACK BUTTON */}
 
                 <button
-                    onClick={() => navigate(-1)}
+                    onClick={() => navigate("/dashboard")}
                     className="flex items-center gap-2 text-gray-500 hover:text-gray-900 mb-5 transition"
                 >
                     <ArrowLeft size={18} />
@@ -138,18 +171,33 @@ const CourseManagement = () => {
 
                     <div className="flex items-center gap-3">
 
+
                         <button
-                            // onClick={() =>
-                            //     navigate(
-                            //         `/educator/course/${courseId}/edit`
-                            //     )
-                            // }
+                            onClick={handlePublish}
+                            className={`flex items-center gap-2 px-4 py-2.5 rounded-lg border transition cursor-pointer font-medium ${isPublished
+                                    ? "border-red-200 text-red-600 bg-white hover:bg-red-50"
+                                    : "border-purple-200 text-green-600 bg-white hover:bg-purple-50"
+                                }`}
+                        >
+                            <Edit3 size={17} />
+
+                            {isPublished ? "Unpublish" : "Publish"}
+                        </button>
+
+
+                        <button
+                            onClick={() =>
+                                navigate(
+                                    `/edit-course/${courseId}`
+                                )
+                            }
                             className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-purple-200 text-purple-600 bg-white hover:bg-purple-50 transition font-medium"
                         >
                             <Edit3 size={17} />
 
                             Edit Course
                         </button>
+
 
 
                         <button
@@ -210,8 +258,8 @@ const CourseManagement = () => {
 
                             <div className="flex items-center justify-between mb-3">
 
-                                <span className="px-3 py-1 rounded-full bg-green-50 text-green-600 text-xs font-semibold">
-                                    Published
+                                <span className={`px-3 py-1 rounded-full ${isPublished ? "bg-green-50" : "bg-red-50"} ${isPublished ? "text-green-600" : "text-red-600"} text-xs font-semibold`}>
+                                    {isPublished ? "Published" : "Unpublished"}
                                 </span>
 
                                 <span className="text-lg font-bold text-gray-900">

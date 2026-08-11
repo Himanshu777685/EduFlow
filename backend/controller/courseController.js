@@ -5,7 +5,7 @@ import User from "../models/userModel.js";
 export const CreateCourse = async (req, res) => {
     try {
         const creator_id = req.userId;
-        const { title, category, description, subTitle, level , price} = req.body;
+        const { title, category, description, subTitle, level, price } = req.body;
 
         const user = await User.findById(creator_id).select("-password");
 
@@ -49,7 +49,7 @@ export const CreateCourse = async (req, res) => {
 
 export const getPublishedCourse = async (req, res) => {
     try {
-        const course = await Course.find({ isPublished: true }).populate("creator" , "name email avatar")
+        const course = await Course.find({ isPublished: true }).populate("creator", "name email avatar")
 
         if (course.length == 0) {
             return res.status(400).json({
@@ -92,7 +92,7 @@ export const editCourse = async (req, res) => {
     try {
         const { courseId } = req.params;
 
-        const { title, subTitle, description, category, level } = req.body;
+        const { title, subTitle, description, category, level, price } = req.body;
 
         let course = await Course.findById(courseId);
 
@@ -102,7 +102,7 @@ export const editCourse = async (req, res) => {
             })
         }
 
-        const updatedData = { title, subTitle, description, category, level }
+        const updatedData = { title, subTitle, description, category, level, price }
 
         if (req.file) {
             const thumbnail = await uploadOnCloudinary(req.file.path);
@@ -172,11 +172,20 @@ export const publishCourse = async (req, res) => {
         const { courseId } = req.params;
 
         let course = await Course.findById(courseId);
+        console.log(course);
         if (!course) {
             return res.status(400).json({
                 message: "course not found"
             })
         }
+
+        if (course.creator.toString() !== req.userId.toString()) {
+            return res.status(403).json({
+                success: false,
+                message: "You are not authorized"
+            });
+        }
+
         course = await Course.findByIdAndUpdate(courseId, { isPublished: true }, { new: true })
 
         return res.status(200).json(course);
@@ -193,12 +202,23 @@ export const UnPublishCourse = async (req, res) => {
         const { courseId } = req.params;
 
         let course = await Course.findById(courseId);
+
+        console.log(course);
+        
         if (!course) {
             return res.status(400).json({
                 message: "course not found"
             })
         }
-        course = await Course.findByIdAndUpdate(courseId, { isPublished: false}, { new: true })
+
+        if (course.creator.toString() !== req.userId.toString()) {
+            return res.status(403).json({
+                success: false,
+                message: "You are not authorized"
+            });
+        }
+
+        course = await Course.findByIdAndUpdate(courseId, { isPublished: false }, { new: true })
 
         return res.status(200).json(course);
 
