@@ -176,7 +176,7 @@ const CourseManagement = () => {
                             onClick={handlePublish}
                             className={`flex items-center gap-2 px-4 py-2.5 rounded-lg border transition cursor-pointer font-medium ${isPublished
                                     ? "border-red-200 text-red-600 bg-white hover:bg-red-50"
-                                    : "border-purple-200 text-green-600 bg-white hover:bg-purple-50"
+                                    : "border-green-200 text-green-600 bg-white hover:bg-green-50"
                                 }`}
                         >
                             <Edit3 size={17} />

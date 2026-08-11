@@ -179,7 +179,7 @@ const Nav = () => {
                                     flex items-center gap-2
                                     px-2 py-1.5
                                     rounded-xl
-                                    hover:bg-slate-100
+                                    hover:bg-indigo-50
                                     transition
                                     cursor-pointer
                                 '
