@@ -6,6 +6,7 @@ import authRouter from './routes/authRoute.js';
 import cors from 'cors';
 import userRouter from './routes/userRoute.js';
 import courseRouter from './routes/courseRoute.js';
+import lectureRouter from './routes/lecturesRoute.js';
 
 dotenv.config()
 
@@ -26,6 +27,7 @@ app.use(cors({
 app.use("/api/auth" , authRouter);
 app.use("/api/user" , userRouter);
 app.use("/api/course" , courseRouter);
+app.use("/api/lecture" , lectureRouter);
 
 app.get('/', (req, res)=>{
     res.send("hello from server");

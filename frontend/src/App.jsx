@@ -19,6 +19,7 @@ import getAllCourses from './customHooks/getAllCourses'
 import getCreatorCourses from './customHooks/getCreatorCourses'
 import CourseManagement from './pages/CourseManagement'
 import { EditCourse } from './pages/EditCourse'
+import CreateLecture from './pages/CreateLecture'
 
 
 const App = () => {
@@ -39,12 +40,21 @@ const App = () => {
         <Route path='/profile' element={userData ? <Profile /> : <Navigate to={"/signup"} />} />
         <Route path='/courses' element={<Courses />} />
         <Route path='/about' element={<About />} />
-        <Route path='/dashboard' element={userData?.user?.role ==="educator" ? <EducatorDashboard /> : <Navigate to={"/signup"} />} />
+        <Route path='/dashboard' element={userData?.user?.role === "educator" ? <EducatorDashboard /> : <Navigate to={"/signup"} />} />
         <Route path='/creator-courses' element={userData?.user?.role === "educator" ? <CreatorCourses /> : <Navigate to={"/signup"} />} />
         <Route path='/create-courses' element={userData?.user?.role === "educator" ? <CreateCourses /> : <Navigate to={"/signup"} />} />
-        <Route path="/courseforeducator/:courseId" element={userData?.user?.role ==="educator" ? <CourseManagement /> : <Navigate to={"/signup"} />} />
-        <Route path='/edit-course/:courseId' element={userData?.user?.role ==="educator" ? <EditCourse /> : <Navigate to={"/signup"} />} />
-        
+        <Route path="/courseforeducator/:courseId" element={userData?.user?.role === "educator" ? <CourseManagement /> : <Navigate to={"/signup"} />} />
+        <Route path='/edit-course/:courseId' element={userData?.user?.role === "educator" ? <EditCourse /> : <Navigate to={"/signup"} />} />
+
+        <Route
+          path="/courseforeducator/:courseId/create-lecture"
+          element={
+            userData?.user?.role === "educator"
+              ? <CreateLecture/>
+              : <Navigate to="/signup" />
+          }
+        />
+
 
       </Routes>
     </>

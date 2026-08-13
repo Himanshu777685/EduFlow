@@ -39,7 +39,7 @@ const CourseManagement = () => {
 
     useEffect(() => {
         console.log("Course in component:", course);
-        if(course){
+        if (course) {
             setIsPublished(course.isPublished || false)
         }
     }, [course]);
@@ -106,7 +106,7 @@ const CourseManagement = () => {
     const revenue =
         (course.price || 0) * studentCount;
 
-    
+
 
     const handlePublish = async () => {
         try {
@@ -175,8 +175,8 @@ const CourseManagement = () => {
                         <button
                             onClick={handlePublish}
                             className={`flex items-center gap-2 px-4 py-2.5 rounded-lg border transition cursor-pointer font-medium ${isPublished
-                                    ? "border-red-200 text-red-600 bg-white hover:bg-red-50"
-                                    : "border-green-200 text-green-600 bg-white hover:bg-green-50"
+                                ? "border-red-200 text-red-600 bg-white hover:bg-red-50"
+                                : "border-green-200 text-green-600 bg-white hover:bg-green-50"
                                 }`}
                         >
                             <Edit3 size={17} />
@@ -201,11 +201,9 @@ const CourseManagement = () => {
 
 
                         <button
-                            // onClick={() =>
-                            //     navigate(
-                            //         `/educator/course/${courseId}/lesson/new`
-                            //     )
-                            // }
+                            onClick={() =>
+                                navigate(`/courseforeducator/${courseId}/create-lecture`)
+                            }
                             className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-purple-600 text-white hover:bg-purple-700 transition font-medium"
                         >
                             <Plus size={18} />
@@ -349,11 +347,9 @@ const CourseManagement = () => {
 
 
                         <button
-                            // onClick={() =>
-                            //     navigate(
-                            //         `/educator/course/${courseId}/lesson/new`
-                            //     )
-                            // }
+                            onClick={() =>
+                                navigate(`/courseforeducator/${courseId}/create-lecture`)
+                            }
                             className="hidden sm:flex items-center gap-2 text-purple-600 font-medium hover:text-purple-700"
                         >
                             <Plus size={18} />
@@ -388,12 +384,10 @@ const CourseManagement = () => {
 
 
                                 <button
-                                    // onClick={() =>
-                                    //     navigate(
-                                    //         `/educator/course/${courseId}/lesson/new`
-                                    //     )
-                                    // }
-                                    className="inline-flex items-center gap-2 px-4 py-2.5 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition"
+                                    onClick={() =>
+                                        navigate(`/courseforeducator/${courseId}/create-lecture`)
+                                    }
+                                    className="inline-flex items-center gap-2 px-4 py-2.5 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition cursor-pointer"
                                 >
                                     <Plus size={18} />
 
