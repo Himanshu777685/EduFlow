@@ -24,8 +24,8 @@ const getCourseforEducator = ({ courseId }) => {
 
                 console.log("from for educator hook")
                 console.log(result)
-
                 setCourse(result.data.course);
+                
             } catch (error) {
                 setError(
                     error.response?.data?.message || "Something went wrong"

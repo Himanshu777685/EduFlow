@@ -35,7 +35,33 @@ const CourseManagement = () => {
 
     const [isPublished, setIsPublished] = useState(false)
 
+    const [lectures, setLectures] = useState([]);
 
+    useEffect(() => {
+
+        const fetchLectures = async () => {
+            try {
+                const result = await axios.get(
+                    `${serverURL}/api/lecture/educator/${courseId}/lectures`,
+                    {
+                        withCredentials: true
+                    }
+                );
+
+                setLectures(result.data.lectures);
+
+            } catch (error) {
+                console.log("STATUS:", error.response?.status);
+                console.log("DATA FROM BACKEND:", error.response?.data);
+                console.log("MESSAGE:", error.response?.data?.message);
+            }
+        };
+
+        if (courseId) {
+            fetchLectures();
+        }
+
+    }, [courseId]);
 
     useEffect(() => {
         console.log("Course in component:", course);
@@ -400,21 +426,29 @@ const CourseManagement = () => {
 
                             <div className="space-y-3">
 
-                                {course.lectures.map(
-                                    (lesson, index) => (
+                                {console.log(lectures)}
 
+
+                                {course.lectures.map((lectureId, index) => {
+
+                                    const lecture = lectures.find(
+                                        (lecture) => lecture._id === lectureId
+                                    );
+
+                                    console.log(lecture)
+                                    console.log(lecture?.title)
+
+                                    return (
                                         <LessonCard
-                                            key={
-                                                lesson._id ||
-                                                index
-                                            }
-                                            lesson={lesson}
+                                            key={lectureId}
+                                            lecture={lecture}
+                                            lectureId={lectureId}
                                             index={index}
                                             courseId={courseId}
+                                            lectureTitle={lecture?.title}
                                         />
-
-                                    )
-                                )}
+                                    );
+                                })}
 
                             </div>
 
@@ -476,9 +510,11 @@ const StatCard = ({
 /* ============================= */
 
 const LessonCard = ({
-    lesson,
+    lectureId,
+    lecture,
     index,
     courseId,
+    lectureTitle
 }) => {
 
     const navigate = useNavigate();
@@ -514,7 +550,7 @@ const LessonCard = ({
 
                     <h3 className="font-semibold text-gray-900 truncate">
 
-                        {lesson.title ||
+                        {lectureTitle ||
                             `Lesson ${index + 1}`}
 
                     </h3>
@@ -522,7 +558,7 @@ const LessonCard = ({
 
                     <div className="flex items-center gap-3 mt-1 text-xs text-gray-500">
 
-                        {lesson.duration && (
+                        {/* {lesson.duration && (
 
                             <span className="flex items-center gap-1">
 
@@ -532,10 +568,10 @@ const LessonCard = ({
 
                             </span>
 
-                        )}
+                        )} */}
 
 
-                        {lesson.isPublished && (
+                        {lecture?.isPublished && (
 
                             <span className="text-green-600">
                                 Published
@@ -553,11 +589,11 @@ const LessonCard = ({
                 <div className="flex items-center gap-1">
 
                     <button
-                        // onClick={() =>
-                        //     navigate(
-                        //         `/educator/course/${courseId}/lesson/${lesson._id}/edit`
-                        //     )
-                        // }
+                        onClick={() =>
+                            navigate(
+                                `/courseforeducator/${courseId}/editLecture/${lectureId}`
+                            )
+                        }
                         className="p-2 rounded-lg text-gray-400 hover:text-purple-600 hover:bg-purple-50 transition"
                     >
                         <Pencil size={17} />
@@ -587,4 +623,4 @@ const LessonCard = ({
 };
 
 
-export default CourseManagement;
+export default CourseManagement

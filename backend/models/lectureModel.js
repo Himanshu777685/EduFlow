@@ -18,7 +18,7 @@ const lectureSchema = new mongoose.Schema(
             required: true,
         },
 
-        resoures: [{
+        resources: [{
             name: {
                 type: String,
                 required: true,

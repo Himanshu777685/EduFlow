@@ -20,6 +20,7 @@ import getCreatorCourses from './customHooks/getCreatorCourses'
 import CourseManagement from './pages/CourseManagement'
 import { EditCourse } from './pages/EditCourse'
 import CreateLecture from './pages/CreateLecture'
+import EditLecture from './pages/EditLecutre'
 
 
 const App = () => {
@@ -50,8 +51,16 @@ const App = () => {
           path="/courseforeducator/:courseId/create-lecture"
           element={
             userData?.user?.role === "educator"
-              ? <CreateLecture/>
+              ? <CreateLecture />
               : <Navigate to="/signup" />
+          }
+        />
+
+        <Route
+          path='/courseforeducator/:courseId/editLecture/:lectureId'
+          element={
+            userData?.user?.role === "educator" ?
+              <EditLecture /> : <Navigate to="/signup" />
           }
         />
 

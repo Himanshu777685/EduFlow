@@ -102,13 +102,15 @@ export const getLectures = async (req, res) => {
     try {
         const { courseId } = req.params;
 
-        const course = await Course.findById(courseID);
+        const course = await Course.findById(courseId);
         if (!course) {
             return res.status(400).json({
                 success: false,
                 message: "No valid course"
             })
         }
+
+        console.log("course.creator:", course.creator);
 
         if (course.creator.toString() !== req.userId.toString()) {
             return res.status(403).json({
@@ -117,7 +119,7 @@ export const getLectures = async (req, res) => {
             });
         }
 
-        const lectures = (await Lecture.find({ course: courseId })).sort({ order: 1 })
+        const lectures = await Lecture.find({ course: courseId }).sort({ order: 1 })
 
         return res.status(200).json({
             lectures
@@ -210,7 +212,7 @@ export const updateLecture = async (req, res) => {
         }
 
         // Update basic information
-       
+
 
         lecture.title = title;
         lecture.description = description || "";
@@ -219,9 +221,9 @@ export const updateLecture = async (req, res) => {
             isPreviewFree === "true" || isPreviewFree === true;
 
 
-        
+
         // Replace video ONLY if provided
-        
+
 
         const videoFile = req.files?.video?.[0];
 
@@ -242,11 +244,13 @@ export const updateLecture = async (req, res) => {
         }
 
 
-        
+
         // Replace resources ONLY if provided
-       
+
 
         const resourceFiles = req.files?.resources || [];
+
+        console.log("RESOURCE FILES:", resourceFiles);
 
         if (resourceFiles.length > 0) {
 
@@ -258,6 +262,8 @@ export const updateLecture = async (req, res) => {
                     file.path
                 );
 
+                console.log("upload file " ,result);
+                
                 if (result) {
                     resources.push({
                         name: file.originalname,
