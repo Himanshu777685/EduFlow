@@ -43,7 +43,7 @@ const EditLecture = () => {
             try {
 
                 const result = await axios.get(
-                    `${serverURL}/api/lecture/educator/lecture/${lectureId}`,
+                    `${serverURL}/api/lecture/lecture/${lectureId}`,
                     {
                         withCredentials: true
                     }

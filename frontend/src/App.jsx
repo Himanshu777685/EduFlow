@@ -21,6 +21,7 @@ import CourseManagement from './pages/CourseManagement'
 import { EditCourse } from './pages/EditCourse'
 import CreateLecture from './pages/CreateLecture'
 import EditLecture from './pages/EditLecutre'
+import Lecture from './pages/Lecture'
 
 
 const App = () => {
@@ -64,6 +65,10 @@ const App = () => {
           }
         />
 
+        <Route
+        path='/course/:courseId/lecture/:lectureId'
+        element={<Lecture/>}
+        />
 
       </Routes>
     </>

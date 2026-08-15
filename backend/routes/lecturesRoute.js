@@ -19,12 +19,12 @@ lectureRouter.post("/create-lecture/:courseId",
     createLecture
 )
 
-lectureRouter.get("/educator/:courseId/lectures",
+lectureRouter.get("/:courseId/lectures",
     isAuth,
     getLectures
 )
 
-lectureRouter.get("/educator/lecture/:lectureId",
+lectureRouter.get("/lecture/:lectureId",
     isAuth,
     getLectureById
 )

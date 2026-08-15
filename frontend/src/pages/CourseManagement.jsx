@@ -36,13 +36,14 @@ const CourseManagement = () => {
     const [isPublished, setIsPublished] = useState(false)
 
     const [lectures, setLectures] = useState([]);
+    const [lectureIds, setLectureIds] = useState([]);
 
     useEffect(() => {
 
         const fetchLectures = async () => {
             try {
                 const result = await axios.get(
-                    `${serverURL}/api/lecture/educator/${courseId}/lectures`,
+                    `${serverURL}/api/lecture/${courseId}/lectures`,
                     {
                         withCredentials: true
                     }
@@ -67,6 +68,7 @@ const CourseManagement = () => {
         console.log("Course in component:", course);
         if (course) {
             setIsPublished(course.isPublished || false)
+            setLectureIds(course.lectures || []);
         }
     }, [course]);
 
@@ -156,6 +158,32 @@ const CourseManagement = () => {
 
         }
     }
+
+    //---------lecture publish -----------------
+
+    const handlePublishToggle = (lectureId, newStatus) => {
+        setLectures(prev =>
+            prev.map(lecture =>
+                lecture._id === lectureId
+                    ? {
+                        ...lecture,
+                        isPublished: newStatus
+                    }
+                    : lecture
+            )
+        );
+    };
+
+    const handleLectureDeleted = (lectureId) => {
+
+        setLectureIds(prev =>
+            prev.filter(id => id !== lectureId)
+        );
+
+        setLectures(prev =>
+            prev.filter(lecture => lecture._id !== lectureId)
+        );
+    };
 
     return (
 
@@ -253,7 +281,7 @@ const CourseManagement = () => {
 
                         <div className="lg:col-span-2">
 
-                            <div className="h-full min-h-[250px] bg-gray-100">
+                            <div className="h-full min-h-62.5  bg-gray-100">
 
                                 {course.thumbnail ? (
 
@@ -429,7 +457,7 @@ const CourseManagement = () => {
                                 {console.log(lectures)}
 
 
-                                {course.lectures.map((lectureId, index) => {
+                                {lectureIds.map((lectureId, index) => {
 
                                     const lecture = lectures.find(
                                         (lecture) => lecture._id === lectureId
@@ -446,6 +474,8 @@ const CourseManagement = () => {
                                             index={index}
                                             courseId={courseId}
                                             lectureTitle={lecture?.title}
+                                            onLectureDeleted={handleLectureDeleted}
+                                            onPublishToggle={handlePublishToggle}
                                         />
                                     );
                                 })}
@@ -514,16 +544,74 @@ const LessonCard = ({
     lecture,
     index,
     courseId,
-    lectureTitle
+    lectureTitle,
+    onLectureDeleted,
+    onPublishToggle
 }) => {
 
     const navigate = useNavigate();
 
+    const [showMenu, setShowMenu] = useState(false);
+    const [updatingPublish, setUpdatingPublish] = useState(false);
+
+    const handlePublishToggle = async () => {
+        try {
+            setUpdatingPublish(true);
+
+            const url = lecture?.isPublished
+                ? `${serverURL}/api/lecture/unpublishLecture/${lectureId}`
+                : `${serverURL}/api/lecture/publishLecture/${lectureId}`;
+
+            const result = await axios.put(
+                url,
+                {},
+                {
+                    withCredentials: true
+                }
+            );
+
+            console.log(result.data);
+
+            // Tell parent to update this lecture
+            onPublishToggle(
+                lectureId,
+                !lecture.isPublished
+            );
+
+            setShowMenu(false);
+
+        } catch (error) {
+            console.log(
+                "Error updating lecture publish status:",
+                error.response?.data?.message || error.message
+            );
+        } finally {
+            setUpdatingPublish(false);
+        }
+    };
+
+    const handleDelete = async (lectureId) => {
+        try {
+
+            const result = await axios.delete(`${serverURL}/api/lecture/deleteLecture/${lectureId}`, { withCredentials: true })
+
+            console.log(result.data)
+
+            onLectureDeleted(lectureId);
+
+        } catch (error) {
+            console.log(
+                "Error in delete lecture:",
+                error.response?.data?.message || error.message
+            );
+        }
+    }
+
     return (
 
-        <div className="group border border-gray-200 rounded-xl p-4 hover:border-purple-200 hover:shadow-sm transition">
+        <div className="group border border-gray-200 rounded-xl p-4 hover:border-purple-200 hover:shadow-sm transition" >
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 ">
 
 
                 {/* NUMBER */}
@@ -537,7 +625,7 @@ const LessonCard = ({
 
                 {/* ICON */}
 
-                <div className="hidden sm:flex w-10 h-10 rounded-lg bg-gray-100 items-center justify-center text-gray-500">
+                <div className="hidden sm:flex w-10 h-10 rounded-full bg-gray-100 items-center justify-center cursor-pointer  text-gray-500 hover:text-blue-500 hover:bg-blue-100" onClick={()=>navigate(`/course/${courseId}/lecture/${lectureId}`)}>
 
                     <PlayCircle size={20} />
 
@@ -546,7 +634,7 @@ const LessonCard = ({
 
                 {/* CONTENT */}
 
-                <div className="flex-1 min-w-0">
+                <div className="flex-1 min-w-0 cursor-pointer" onClick={()=>navigate(`/course/${courseId}/lecture/${lectureId}`)} >
 
                     <h3 className="font-semibold text-gray-900 truncate">
 
@@ -571,13 +659,15 @@ const LessonCard = ({
                         )} */}
 
 
-                        {lecture?.isPublished && (
+                        {lecture?.isPublished ? (
 
                             <span className="text-green-600">
                                 Published
                             </span>
 
-                        )}
+                        ) : (<span className="text-red-600">
+                            Not Published
+                        </span>)}
 
                     </div>
 
@@ -601,17 +691,39 @@ const LessonCard = ({
 
 
                     <button
-                        className="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition"
+                        className="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition cursor-pointer" onClick={() => handleDelete(lectureId)}
+
                     >
                         <Trash2 size={17} />
                     </button>
 
+                    <div className="relative">
 
-                    <button
-                        className="p-2 rounded-lg text-gray-400 hover:bg-gray-100 transition"
-                    >
-                        <MoreVertical size={18} />
-                    </button>
+                        <button
+                            onClick={() => setShowMenu(prev => !prev)}
+                            className="p-2 rounded-lg text-gray-400 hover:bg-gray-100 transition"
+                        >
+                            <MoreVertical size={18} />
+                            {showMenu && (
+                                <div className="absolute right-0 top-10 z-20 w-44 bg-white border border-gray-200 rounded-lg shadow-lg py-1">
+
+                                    <button
+                                        onClick={handlePublishToggle}
+                                        disabled={updatingPublish}
+                                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+                                    >
+                                        {updatingPublish
+                                            ? "Updating..."
+                                            : lecture?.isPublished
+                                                ? "Unpublish Lecture"
+                                                : "Publish Lecture"
+                                        }
+                                    </button>
+
+                                </div>
+                            )}
+                        </button>
+                    </div>
 
                 </div>
 

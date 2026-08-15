@@ -102,6 +102,15 @@ export const editCourse = async (req, res) => {
             })
         }
 
+        if(course.creator.toString() !== userId.toString()){
+            
+            return res.status(403).json({
+                success: false,
+                message: "You are not authorized"
+            });
+        
+        }
+
         const updatedData = { title, subTitle, description, category, level, price }
 
         if (req.file) {
@@ -157,6 +166,13 @@ export const removeCourse = async (req, res) => {
         }
 
         course = await Course.findByIdAndDelete(courseId);
+
+        if (course.creator.toString() !== req.userId.toString()) {
+            return res.status(403).json({
+                success: false,
+                message: "You are not authorized"
+            });
+        }
 
         return res.status(200).json(course);
     } catch (error) {

@@ -44,7 +44,10 @@ export const createLecture = async (req, res) => {
         }
 
         const videoUpload = await uploadOnCloudinary(
-            videoFile.path
+            videoFile.path, {
+            resource_type: "raw"
+        }
+
         );
 
         const resources = [];
@@ -103,6 +106,8 @@ export const getLectures = async (req, res) => {
         const { courseId } = req.params;
 
         const course = await Course.findById(courseId);
+
+
         if (!course) {
             return res.status(400).json({
                 success: false,
@@ -110,16 +115,18 @@ export const getLectures = async (req, res) => {
             })
         }
 
-        console.log("course.creator:", course.creator);
+        // console.log("course.creator:", course.creator);
 
-        if (course.creator.toString() !== req.userId.toString()) {
-            return res.status(403).json({
-                success: false,
-                message: "You are not authorized"
-            });
-        }
+        // if (course.creator.toString() !== req.userId.toString()) {
+        //     return res.status(403).json({
+        //         success: false,
+        //         message: "You are not authorized"
+        //     });
+        // }
 
         const lectures = await Lecture.find({ course: courseId }).sort({ order: 1 })
+
+        
 
         return res.status(200).json({
             lectures
@@ -262,8 +269,8 @@ export const updateLecture = async (req, res) => {
                     file.path
                 );
 
-                console.log("upload file " ,result);
-                
+                console.log("upload file ", result);
+
                 if (result) {
                     resources.push({
                         name: file.originalname,
