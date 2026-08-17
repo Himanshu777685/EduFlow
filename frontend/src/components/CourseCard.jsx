@@ -1,7 +1,10 @@
 import React from "react";
 import { FiClock, FiBookOpen, FiStar } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
 const CourseCard = ({ course }) => {
+
+    const navigate = useNavigate();
 
 
     return (
@@ -102,7 +105,7 @@ const CourseCard = ({ course }) => {
                         </span>
                     </div>
 
-                    <button className="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition">
+                    <button className="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition cursor-pointer" onClick={()=>navigate(`/course/${course._id}`)}>
                         View Course
                     </button>
 

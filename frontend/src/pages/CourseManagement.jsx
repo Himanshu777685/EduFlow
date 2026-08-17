@@ -155,7 +155,7 @@ const CourseManagement = () => {
                 setIsPublished(false)
             }
         } catch (error) {
-
+            console.log(error)
         }
     }
 
