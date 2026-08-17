@@ -7,6 +7,7 @@ import cors from 'cors';
 import userRouter from './routes/userRoute.js';
 import courseRouter from './routes/courseRoute.js';
 import lectureRouter from './routes/lecturesRoute.js';
+import paymentRouter from './routes/paymentRoute.js';
 
 dotenv.config()
 
@@ -28,6 +29,7 @@ app.use("/api/auth" , authRouter);
 app.use("/api/user" , userRouter);
 app.use("/api/course" , courseRouter);
 app.use("/api/lecture" , lectureRouter);
+app.use("/api/payment", paymentRouter);
 
 app.get('/', (req, res)=>{
     res.send("hello from server");

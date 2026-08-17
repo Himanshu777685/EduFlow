@@ -3,12 +3,14 @@ import { ArrowLeft, BookOpen, Clock, PlayCircle, Lock } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { serverURL } from '../App'
+import { useSelector } from 'react-redux'
 
 const StudentCourse = () => {
 
     const { courseId } = useParams()
     const navigate = useNavigate()
 
+    const user = useSelector((state) => state.user.userData)
     const [course, setCourse] = useState(null)
     const [loading, setLoading] = useState(false)
     const [lectures, setLectures] = useState([]);
@@ -104,6 +106,147 @@ const StudentCourse = () => {
 
 
     const isFree = !course.price || course.price === 0
+
+
+    const handlePayment = async () => {
+        try {
+            setLoading(true);
+
+            // Create Razorpay order
+            const result = await axios.post(
+                `${serverURL}/api/payment/create-order/${courseId}`,
+                {},
+                {
+                    withCredentials: true
+                }
+            );
+
+            console.log("Order:", result.data);
+
+            const { order } = result.data;
+
+            // Razorpay checkout options
+            const options = {
+                key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+
+                amount: order.amount,
+                currency: order.currency,
+
+                name: "EduFlow",
+                description: course.title,
+
+                order_id: order.id,
+
+                handler: async function (response) {
+
+                    try {
+
+                        const verifyResult = await axios.post(
+                            `${serverURL}/api/payment/verify-payment`,
+                            {
+                                razorpay_order_id:
+                                    response.razorpay_order_id,
+
+                                razorpay_payment_id:
+                                    response.razorpay_payment_id,
+
+                                razorpay_signature:
+                                    response.razorpay_signature,
+
+                                courseId: courseId
+                            },
+                            {
+                                withCredentials: true
+                            }
+                        );
+
+                        console.log(
+                            "Payment verification:",
+                            verifyResult.data
+                        );
+
+                        if (verifyResult.data.success) {
+
+                            alert("Payment successful!");
+
+                            // Later we can update enrollment state
+                            // and redirect to the course/lecture page.
+
+                        }
+
+                    } catch (error) {
+
+                        console.log(
+                            "Payment verification error:",
+                            error
+                        );
+
+                        alert("Payment verification failed");
+
+                    }
+                },
+
+                prefill: {
+                    name: "",
+                    email: ""
+                },
+
+                theme: {
+                    color: "#000000"
+                }
+            };
+
+            const razorpay = new window.Razorpay(options);
+
+            razorpay.open();
+
+        } catch (error) {
+
+            console.log("Payment error:", error);
+
+            alert(
+                error.response?.data?.message ||
+                "Unable to start payment"
+            );
+
+        } finally {
+
+            setLoading(false);
+
+        }
+    };
+
+    const isEnrolled = course?.enrolledStudent?.includes(user?._id);
+
+
+    const handleOpenLecture = (lecture) => {
+
+        try {
+            // Free preview lecture → everyone can access
+            if (lecture?.isPreviewFree) {
+                navigate(`/course/${course._id}/lecture/${lecture._id}`);
+                return;
+            }
+
+            // Free course → everyone can access
+            if (isFree) {
+                navigate(`/course/${course._id}/lecture/${lecture._id}`);
+                return;
+            }
+
+            // Paid course + enrolled → allow access
+            if (isEnrolled) {
+                navigate(`/course/${course._id}/lecture/${lecture._id}`);
+                return;
+            }
+
+            // Paid course + not enrolled → block
+            alert("Please enroll in this course to access this lecture.");
+        } catch (error) {
+
+            console.log(error);
+        }
+    };
 
 
     return (
@@ -239,27 +382,26 @@ const StudentCourse = () => {
                         {/* CTA */}
 
                         <button
+                            disabled={isEnrolled}
                             onClick={() => {
 
                                 if (isFree) {
-                                    // later we will navigate to first lecture
-                                    console.log("Start learning")
-
+                                    console.log("Start learning");
                                 } else {
-                                    // later payment logic
-                                    console.log("Buy course")
-
+                                    handlePayment();
                                 }
 
                             }}
-                            className="w-full sm:w-fit px-7 py-3 bg-black text-white rounded-xl text-sm font-semibold hover:bg-gray-800 transition"
-                        >
 
+                            className={`px-6 py-3 rounded-lg ${isEnrolled
+                                ? "bg-green-600 cursor-not-allowed"
+                                : "w-full sm:w-fit px-7 py-3 bg-black text-white rounded-xl text-sm font-semibold hover:bg-gray-800 transition"
+                                }`}
+                        >
                             {isFree
                                 ? "Start Learning"
-                                : `Buy Course · ₹${course.price}`
+                                : { isEnrolled } ? "✓ Enrolled" : `Buy Course ${course?.price}`
                             }
-
                         </button>
 
                     </div>
@@ -316,7 +458,7 @@ const StudentCourse = () => {
 
                                 {/* LECTURE INFO */}
 
-                                <div className="flex-1 min-w-0">
+                                <div className="flex-1 min-w-0 cursor-pointer" onClick={() => handleOpenLecture(lecture)}>
 
                                     <h3 className="text-sm font-medium text-gray-900 truncate">
                                         {lecture.title}
@@ -329,14 +471,14 @@ const StudentCourse = () => {
                                 </div>
 
                                 <div className='text-sm text-gray-400 flex justify-center items-center gap-2 '>
-                                    <BookOpen size={18} className='text-gray-400'/>
+                                    <BookOpen size={18} className='text-gray-400' />
                                     {lecture.resources.length} document
                                 </div>
 
 
                                 {/* ACCESS ICON */}
 
-                                {(isFree || lecture.isPreviewFree) ? (
+                                {(isFree || lecture.isPreviewFree || isEnrolled) ? (
 
                                     <PlayCircle
                                         size={19}
