@@ -10,8 +10,8 @@ const CoursePerformance = () => {
     const topCourses = [...(creatorCourses || [])]
         .sort(
             (a, b) =>
-                (b.enrolledStudents?.length ?? 0) -
-                (a.enrolledStudents?.length ?? 0)
+                (b.enrolledStudent?.length ?? 0) -
+                (a.enrolledStudent?.length ?? 0)
         )
         .slice(0, 4);
 
@@ -36,7 +36,7 @@ const CoursePerformance = () => {
                     topCourses.map((course) => {
 
                         const students =
-                            course.enrolledStudents?.length ?? 0;
+                            course.enrolledStudent?.length ?? 0;
 
                         const revenue =
                             (course.price ?? 0) * students;
@@ -65,7 +65,7 @@ const CoursePerformance = () => {
                                             width: `${Math.min(
                                                 (students /
                                                     Math.max(
-                                                        topCourses[0]?.enrolledStudents?.length ?? 1,
+                                                        topCourses[0]?.enrolledStudent?.length ?? 1,
                                                         1
                                                     )) *
                                                     100,

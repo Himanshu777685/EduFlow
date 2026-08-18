@@ -64,7 +64,7 @@ const RecentCourses = ({ search }) => {
                 </span>
 
                 <span className="text-slate-500">
-                  {course?.enrolledStudents?.length || 0} Students
+                  {course?.enrolledStudent?.length || 0} Students
                 </span>
 
                 <span className="text-slate-500">{`₹${course?.price }`|| "Free"}</span>

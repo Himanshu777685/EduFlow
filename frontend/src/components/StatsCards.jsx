@@ -15,13 +15,13 @@ const StatsCards = () => {
   )?.length || 0;
 
   const totalStudents = creatorCourses.reduce(
-    (total, course) => total + course.enrolledStudents?.length,
+    (total, course) => total + course.enrolledStudent?.length,
     0
   );
 
   const totalRevenue = creatorCourses.reduce(
     (total, course) =>
-        total +( course.price||0) *( course.enrolledStudents?.length || 0),
+        total +( course.price||0) *( course.enrolledStudent?.length || 0),
     0
 );
 

@@ -23,6 +23,7 @@ import CreateLecture from './pages/CreateLecture'
 import EditLecture from './pages/EditLecutre'
 import Lecture from './pages/Lecture'
 import StudentCourse from './pages/StudentCourse'
+import StudentLecture from './pages/StudentLecture'
 
 
 const App = () => {
@@ -69,6 +70,11 @@ const App = () => {
         <Route
         path='/course/:courseId/lecture/:lectureId'
         element={<Lecture/>}
+        />
+
+        <Route
+        path='/course/:courseId/student-lecture/:lectureId'
+        element={<StudentLecture/>}
         />
 
         <Route

@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { serverURL } from '../App'
 import { useSelector } from 'react-redux'
+import { toast } from 'react-toastify'
 
 const StudentCourse = () => {
 
@@ -11,6 +12,8 @@ const StudentCourse = () => {
     const navigate = useNavigate()
 
     const user = useSelector((state) => state.user.userData)
+    console.log("USER FROM REDUX:", user);
+
     const [course, setCourse] = useState(null)
     const [loading, setLoading] = useState(false)
     const [lectures, setLectures] = useState([]);
@@ -27,9 +30,10 @@ const StudentCourse = () => {
                     `${serverURL}/api/course/getCourse/${courseId}`
                 )
 
-                console.log("course: ", result.data)
+                console.log("course: ", result.data.course)
 
                 setCourse(result.data.course)
+
 
             } catch (error) {
 
@@ -47,6 +51,10 @@ const StudentCourse = () => {
         }
 
     }, [courseId])
+
+    useEffect(() => {
+        console.log("COURSE STATE UPDATED:", course);
+    }, [course]);
 
     useEffect(() => {
         const fetchLectures = async () => {
@@ -167,7 +175,8 @@ const StudentCourse = () => {
 
                         if (verifyResult.data.success) {
 
-                            alert("Payment successful!");
+                            setCourse(verifyResult.data.course);
+                            toast.success("Payment successful!");
 
                             // Later we can update enrollment state
                             // and redirect to the course/lecture page.
@@ -181,7 +190,7 @@ const StudentCourse = () => {
                             error
                         );
 
-                        alert("Payment verification failed");
+                        toast.error("Payment verification failed");
 
                     }
                 },
@@ -216,38 +225,34 @@ const StudentCourse = () => {
         }
     };
 
-    const isEnrolled = course?.enrolledStudent?.includes(user?._id);
+    const isEnrolled = course?.enrolledStudent?.includes(user?.user?._id);
 
+    console.log("USER ID:", user?.user?._id);
+    console.log("COURSE ENROLLED STUDENTS:", course?.enrolledStudent);
+    console.log("IS ENROLLED:", isEnrolled);
 
     const handleOpenLecture = (lecture) => {
-
         try {
-            // Free preview lecture → everyone can access
-            if (lecture?.isPreviewFree) {
-                navigate(`/course/${course._id}/lecture/${lecture._id}`);
+            console.log(lecture);
+
+            const canAccess =
+                lecture?.isPreviewFree ||
+                isFree ||
+                isEnrolled;
+
+            if (canAccess) {
+                navigate(
+                    `/course/${course._id}/student-lecture/${lecture._id}`
+                );
                 return;
             }
 
-            // Free course → everyone can access
-            if (isFree) {
-                navigate(`/course/${course._id}/lecture/${lecture._id}`);
-                return;
-            }
+            toast.error("Please enroll in this course to access this lecture.");
 
-            // Paid course + enrolled → allow access
-            if (isEnrolled) {
-                navigate(`/course/${course._id}/lecture/${lecture._id}`);
-                return;
-            }
-
-            // Paid course + not enrolled → block
-            alert("Please enroll in this course to access this lecture.");
         } catch (error) {
-
             console.log(error);
         }
     };
-
 
     return (
 
@@ -394,13 +399,15 @@ const StudentCourse = () => {
                             }}
 
                             className={`px-6 py-3 rounded-lg ${isEnrolled
-                                ? "bg-green-600 cursor-not-allowed"
+                                ? "bg-blue-600 w-full sm:w-fit py-3 px-7 text-white cursor-not-allowed"
                                 : "w-full sm:w-fit px-7 py-3 bg-black text-white rounded-xl text-sm font-semibold hover:bg-gray-800 transition"
                                 }`}
                         >
                             {isFree
                                 ? "Start Learning"
-                                : { isEnrolled } ? "✓ Enrolled" : `Buy Course ${course?.price}`
+                                : isEnrolled
+                                    ? "✓ Enrolled"
+                                    : `Buy Course ${course?.price}`
                             }
                         </button>
 

@@ -111,8 +111,14 @@ export const verifyPayment = async (req, res) => {
 
         // Add student to enrolled students
         if (!course.enrolledStudent.includes(req.userId)) {
+            console.log("req.userId:", req.userId);
+            console.log("course.enrolledStudent BEFORE:", course.enrolledStudent);
+
             course.enrolledStudent.push(req.userId);
+
             await course.save();
+
+            console.log("course.enrolledStudent AFTER:", course.enrolledStudent);
         }
 
         const user = await User.findById(req.userId);
