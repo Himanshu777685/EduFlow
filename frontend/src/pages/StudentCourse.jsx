@@ -52,9 +52,6 @@ const StudentCourse = () => {
 
     }, [courseId])
 
-    useEffect(() => {
-        console.log("COURSE STATE UPDATED:", course);
-    }, [course]);
 
     useEffect(() => {
         const fetchLectures = async () => {
@@ -225,6 +222,26 @@ const StudentCourse = () => {
         }
     };
 
+    const handleFreeEnrollment = async () => {
+        try {
+            setLoading(true);
+            const result = await axios.put(`${serverURL}/api/course/${courseId}/freeCourseEnrollment`, {}, { withCredentials: true });
+
+            console.log(result.data);
+
+            if (result.data.success) {
+                toast.success("Course enrolled successfully")
+                setCourse(result.data.course)
+            }
+
+        } catch (error) {
+            console.log(error);
+            toast.error("Enrollment not done")
+        } finally {
+            setLoading(false);
+        }
+    }
+
     const isEnrolled = course?.enrolledStudent?.includes(user?.user?._id);
 
     console.log("USER ID:", user?.user?._id);
@@ -391,7 +408,7 @@ const StudentCourse = () => {
                             onClick={() => {
 
                                 if (isFree) {
-                                    console.log("Start learning");
+                                    handleFreeEnrollment();
                                 } else {
                                     handlePayment();
                                 }
@@ -404,10 +421,12 @@ const StudentCourse = () => {
                                 }`}
                         >
                             {isFree
-                                ? "Start Learning"
-                                : isEnrolled
+                                ? isEnrolled
                                     ? "✓ Enrolled"
-                                    : `Buy Course ${course?.price}`
+                                    : "Start Learning"
+                                : isEnrolled
+                                        ? "✓ Enrolled"
+                                        : `Buy Course ₹${course?.price}`
                             }
                         </button>
 

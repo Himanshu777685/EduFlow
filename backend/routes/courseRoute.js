@@ -1,5 +1,5 @@
 import express, { Router } from 'express';
-import { CreateCourse, editCourse, getCourseById, getCourseByIdForCreator, getCreatorCourse, getPublishedCourse, publishCourse, removeCourse, UnPublishCourse } from '../controller/courseController.js';
+import { CreateCourse, editCourse, freeCourseEnrollment, getCourseById, getCourseByIdForCreator, getCreatorCourse, getPublishedCourse, publishCourse, removeCourse, UnPublishCourse } from '../controller/courseController.js';
 import isAuth from '../middleware/isAuth.js';
 import upload from '../middleware/multer.js';
 
@@ -14,5 +14,6 @@ courseRouter.delete("/deleteCourse/:courseId" , isAuth ,removeCourse);
 courseRouter.put("/publishCourse/:courseId" , isAuth , publishCourse);
 courseRouter.put("/unPublishCourse/:courseId" , isAuth , UnPublishCourse);
 courseRouter.get("/getCourseforCreator/:courseId" , isAuth , getCourseByIdForCreator);
+courseRouter.put("/:courseId/freeCourseEnrollment", isAuth , freeCourseEnrollment);
 
 export default courseRouter

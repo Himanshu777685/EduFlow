@@ -102,13 +102,13 @@ export const editCourse = async (req, res) => {
             })
         }
 
-        if(course.creator.toString() !== userId.toString()){
-            
+        if (course.creator.toString() !== userId.toString()) {
+
             return res.status(403).json({
                 success: false,
                 message: "You are not authorized"
             });
-        
+
         }
 
         const updatedData = { title, subTitle, description, category, level, price }
@@ -220,7 +220,7 @@ export const UnPublishCourse = async (req, res) => {
         let course = await Course.findById(courseId);
 
         console.log(course);
-        
+
         if (!course) {
             return res.status(400).json({
                 message: "course not found"
@@ -301,3 +301,64 @@ export const getCourseByIdForCreator = async (req, res) => {
         });
     }
 };
+
+
+
+export const freeCourseEnrollment = async (req, res) => {
+    try {
+
+        const { courseId } = req.params;
+
+        const course = await Course.findById(courseId);
+
+        if (!course) {
+            return res.status(400).json({
+                success: false,
+                message: "Course not found"
+            });
+        }
+
+        if (!course.enrolledStudent.includes(req.userId)) {
+
+            course.enrolledStudent.push(req.userId);
+
+            await course.save();
+        }
+
+        if (course.price && course.price > 0) {
+            return res.status(400).json({
+                success: false,
+                message: "This is a paid course"
+            });
+        }
+
+        const user = await User.findById(req.userId);
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        if (!user.enrolledCourses.includes(courseId)) {
+            user.enrolledCourses.push(courseId);
+            await user.save();
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "enrolled successfully",
+            course,
+            user
+        })
+
+    } catch (error) {
+        console.log("enroll free course error :", error);
+
+        return res.status(500).json({
+            success: false,
+            message: `Enroll free course error: ${error.message}`
+        });
+    }
+}

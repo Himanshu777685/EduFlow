@@ -126,7 +126,7 @@ export const getLectures = async (req, res) => {
 
         const lectures = await Lecture.find({ course: courseId }).sort({ order: 1 })
 
-        
+
 
         return res.status(200).json({
             lectures
@@ -471,4 +471,3 @@ export const unpublishLecture = async (req, res) => {
         });
     }
 };
-

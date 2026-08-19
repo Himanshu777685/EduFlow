@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import { toast } from "react-toastify";
 import { serverURL } from "../App";
@@ -25,6 +25,8 @@ const Profile = () => {
   const { userData } = useSelector(
     (state) => state.user
   );
+
+  console.log("PROFILE PAGE", userData)
 
   const navigate = useNavigate();
   const [editProfile, setEditProfile] = useState(false);
@@ -286,11 +288,13 @@ const Profile = () => {
             ) : (
 
               <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+              {console.log("ENROLLED COURSES:", userData?.user?.enrolledCourses)}
 
-                {userData?.user?.enrolledCourses?.map((course) => (
+                {userData?.user?.enrolledCourses?.map((courseId) => (
+                  
                   <CourseCard
-                    key={course._id}
-                    course={course}
+                    key={courseId}
+                    courseId={courseId}
                   />
                 ))}
 
@@ -465,17 +469,38 @@ const Profile = () => {
    COURSE CARD
 ============================ */
 
-const CourseCard = ({ course }) => {
+const CourseCard = ({ courseId }) => {
 
-  const progress = course.progress || 0;
+  const navigate = useNavigate();
+  const [course , setCourse] = useState(null);
+
+  useEffect(()=>{
+    const fetchCourse = async(courseId) =>{
+    try {
+      
+      const result = await axios.get(`${serverURL}/api/course/getCourse/${courseId}`);
+
+      console.log("PROFILE COURSE", result.data)
+      setCourse(result.data.course)
+
+    } catch (error) {
+      
+    }
+  }
+
+  if(courseId){
+    fetchCourse(courseId);
+  }
+  },[courseId])
+
 
   return (
     <div className="overflow-hidden rounded-xl border border-slate-200 bg-white transition hover:-translate-y-1 hover:shadow-md">
 
-      {course.thumbnail && (
+      {course?.thumbnail && (
         <img
-          src={course.thumbnail}
-          alt={course.title}
+          src={course?.thumbnail}
+          alt={course?.title}
           className="h-40 w-full object-cover"
         />
       )}
@@ -483,16 +508,16 @@ const CourseCard = ({ course }) => {
       <div className="p-5">
 
         <h3 className="font-semibold text-slate-800">
-          {course.title}
+          {course?.title}
         </h3>
 
-        <p className="mt-1 text-sm text-slate-500">
-          {course.instructor || "Course"}
-        </p>
+        {/* <p className="mt-1 text-sm text-slate-500">
+          {course?.creator || "Course"}
+        </p> */}
 
 
         {/* PROGRESS */}
-        <div className="mt-5">
+        {/* <div className="mt-5">
 
           <div className="mb-2 flex justify-between text-xs">
 
@@ -517,10 +542,10 @@ const CourseCard = ({ course }) => {
 
           </div>
 
-        </div>
+        </div> */}
 
 
-        <button className="mt-5 text-sm font-medium text-blue-600 hover:text-blue-700">
+        <button className="mt-5 text-sm font-medium text-blue-600 hover:text-blue-700 cursor-pointer" onClick={()=>navigate(`/course/${courseId}`)}>
           Continue Learning →
         </button>
 
