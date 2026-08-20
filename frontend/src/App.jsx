@@ -24,6 +24,7 @@ import EditLecture from './pages/EditLecutre'
 import Lecture from './pages/Lecture'
 import StudentCourse from './pages/StudentCourse'
 import StudentLecture from './pages/StudentLecture'
+import MyCourse from './pages/MyCourse'
 
 
 const App = () => {
@@ -82,6 +83,10 @@ const App = () => {
         element={<StudentCourse/>}
         />
         
+        <Route
+        path='/myCourse' 
+        element= {userData ? <MyCourse /> : <Navigate to={"/courses"} />}
+        />
 
       </Routes>
     </>

@@ -304,7 +304,7 @@ const Nav = () => {
                                         '
                                         onClick={() => {
                                             setOpen(!open)
-                                            navigate("/courses")
+                                            navigate("/myCourse")
                                         }}
                                     >
                                         <BookOpen size={18} />

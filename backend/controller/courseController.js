@@ -362,3 +362,56 @@ export const freeCourseEnrollment = async (req, res) => {
         });
     }
 }
+
+  
+
+export const getMyCourses = async (req, res) => {
+    try {
+
+        const studentId = req.userId;
+
+        const student = await User.findById(studentId)
+            .populate({
+                path: "enrolledCourses",
+                populate: {
+                    path: "lectures"
+                }
+            });
+
+        if (!student) {
+            return res.status(404).json({
+                success: false,
+                message: "Student not found"
+            });
+        }
+
+        const courses = student.enrolledCourses.map(course => {
+
+            const courseProgress = student.progress.find(
+                item =>
+                    item.course.toString() === course._id.toString()
+            );
+
+            return {
+                ...course.toObject(),
+
+                completedLectures:
+                    courseProgress?.completedLectures || []
+            };
+        });
+
+        return res.status(200).json({
+            success: true,
+            courses
+        });
+
+    } catch (error) {
+
+        console.log("Get my courses error:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Failed to fetch my courses"
+        });
+    }
+};

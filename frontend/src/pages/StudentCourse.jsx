@@ -18,6 +18,13 @@ const StudentCourse = () => {
     const [loading, setLoading] = useState(false)
     const [lectures, setLectures] = useState([]);
 
+    const [completedLectures, setCompletedLectures] = useState([]);
+    const [completingLecture, setCompletingLecture] = useState(null);
+
+    const isFree = !course?.price || course?.price === 0;
+    const isEnrolled = course?.enrolledStudent?.includes(user?.user?._id);
+
+
     useEffect(() => {
 
         const getCourse = async () => {
@@ -74,6 +81,93 @@ const StudentCourse = () => {
         }
     }, [courseId])
 
+    useEffect(() => {
+
+        const fetchProgress = async () => {
+            try {
+
+                const result = await axios.get(
+                    `${serverURL}/api/lecture/progress/${courseId}`,
+                    {
+                        withCredentials: true
+                    }
+                );
+
+                if (result.data.success) {
+                    setCompletedLectures(
+                        result.data.completedLectures
+                    );
+                }
+
+            } catch (error) {
+
+                console.log(
+                    "Error fetching course progress:",
+                    error.response?.data?.message || error.message
+                );
+
+            }
+        };
+
+        if (courseId && isEnrolled) {
+            fetchProgress();
+        }
+
+    }, [courseId, isEnrolled]);
+
+
+    const handleCompleteLecture = async (lectureId) => {
+
+        try {
+
+            setCompletingLecture(lectureId);
+
+            const result = await axios.post(
+                `${serverURL}/api/lecture/completeLecture/${lectureId}`,
+                {},
+                {
+                    withCredentials: true
+                }
+            );
+
+            if (result.data.success) {
+
+                setCompletedLectures(prev => {
+
+                    if (prev.includes(lectureId)) {
+                        return prev;
+                    }
+
+                    return [...prev, lectureId];
+                });
+
+                toast.success("Lecture completed");
+            }
+
+        } catch (error) {
+
+            console.log(
+                "Error completing lecture:",
+                error.response?.data?.message || error.message
+            );
+
+            toast.error(
+                error.response?.data?.message ||
+                "Failed to mark lecture as completed"
+            );
+
+        } finally {
+
+            setCompletingLecture(null);
+        }
+    };
+
+    const isLectureCompleted = (lectureId) => {
+        return completedLectures.some(
+            id => id.toString() === lectureId.toString()
+        );
+    };
+
 
     // ---------------- LOADING ----------------
 
@@ -110,7 +204,7 @@ const StudentCourse = () => {
     }
 
 
-    const isFree = !course.price || course.price === 0
+
 
 
     const handlePayment = async () => {
@@ -242,7 +336,7 @@ const StudentCourse = () => {
         }
     }
 
-    const isEnrolled = course?.enrolledStudent?.includes(user?.user?._id);
+
 
     console.log("USER ID:", user?.user?._id);
     console.log("COURSE ENROLLED STUDENTS:", course?.enrolledStudent);
@@ -343,14 +437,23 @@ const StudentCourse = () => {
                             </span>
 
 
-                            <span className="text-xl font-bold text-gray-900">
+                            <div className="flex items-center justify-between mt-4">
 
-                                {isFree
-                                    ? "Free"
-                                    : `₹${course.price}`
-                                }
+                                {isEnrolled ? (
+                                    <span className="text-sm font-semibold text-green-600 bg-green-50 px-3 py-1.5 rounded-full">
+                                        ✓ Enrolled
+                                    </span>
+                                ) : (
+                                    <span className="text-lg font-bold text-gray-900">
+                                        {course.price === 0
+                                            ? "Free"
+                                            : `₹${course.price}`
+                                        }
+                                    </span>
+                                )}
 
-                            </span>
+
+                            </div>
 
                         </div>
 
@@ -425,8 +528,8 @@ const StudentCourse = () => {
                                     ? "✓ Enrolled"
                                     : "Start Learning"
                                 : isEnrolled
-                                        ? "✓ Enrolled"
-                                        : `Buy Course ₹${course?.price}`
+                                    ? "✓ Enrolled"
+                                    : `Buy Course ₹${course?.price}`
                             }
                         </button>
 
@@ -501,6 +604,29 @@ const StudentCourse = () => {
                                     {lecture.resources.length} document
                                 </div>
 
+                                {isLectureCompleted(lecture._id) ? (
+
+                                    <span className="text-xs font-medium text-green-600 bg-green-50 px-3 py-1.5 rounded-full whitespace-nowrap">
+                                        ✓ Completed
+                                    </span>
+
+                                ) : (
+
+                                    (isFree || lecture.isPreviewFree || isEnrolled) && (
+
+                                        <button
+                                            onClick={() => handleCompleteLecture(lecture._id)}
+                                            disabled={completingLecture === lecture._id}
+                                            className="text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-full whitespace-nowrap transition disabled:opacity-50"
+                                        >
+                                            {completingLecture === lecture._id
+                                                ? "Saving..."
+                                                : "Mark Complete"
+                                            }
+                                        </button>
+
+                                    )
+                                )}
 
                                 {/* ACCESS ICON */}
 

@@ -1,7 +1,7 @@
 import express from 'express'
 import isAuth from '../middleware/isAuth.js'
 import upload from '../middleware/multer.js'
-import { createLecture, deleteLecture, getLectureById, getLectures, publishLecture, unpublishLecture, updateLecture } from '../controller/lectureController.js'
+import { completeLecture, createLecture, deleteLecture, getCourseProgress, getLectureById, getLectures, publishLecture, unpublishLecture, updateLecture } from '../controller/lectureController.js'
 
 const lectureRouter = express.Router()
 
@@ -57,6 +57,18 @@ lectureRouter.put("/unpublishLecture/:lectureId",
     unpublishLecture
 )
 
+
+lectureRouter.post(
+    "/completeLecture/:lectureId",
+    isAuth,
+    completeLecture
+);
+
+lectureRouter.get(
+    "/progress/:courseId",
+    isAuth,
+    getCourseProgress
+);
 
 
 export default lectureRouter

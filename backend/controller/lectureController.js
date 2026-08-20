@@ -1,6 +1,7 @@
 import uploadOnCloudinary from "../config/cloudinary.js";
 import Course from "../models/courseModel.js";
 import Lecture from "../models/lectureModel.js";
+import User from "../models/userModel.js";
 
 
 
@@ -468,6 +469,115 @@ export const unpublishLecture = async (req, res) => {
         return res.status(500).json({
             success: false,
             message: `Unpublish lecture error: ${error.message}`
+        });
+    }
+};
+
+//------------------------------------
+// COMPLETE LECTURE
+//-----------------------------------
+
+export const completeLecture = async (req, res) => {
+    try {
+        const { lectureId } = req.params;
+        const studentId = req.userId;
+
+        const lecture = await Lecture.findById(lectureId);
+
+        if (!lecture) {
+            return res.status(404).json({
+                success: false,
+                message: "Lecture not found"
+            });
+        }
+
+        const student = await User.findById(studentId);
+
+        if (!student) {
+            return res.status(404).json({
+                success: false,
+                message: "Student not found"
+            });
+        }
+
+        const courseId = lecture.course;
+
+        let courseProgress = student.progress.find(
+            item => item.course.toString() === courseId.toString()
+        );
+
+        // No progress record for this course yet
+        if (!courseProgress) {
+
+            student.progress.push({
+                course: courseId,
+                completedLectures: [lectureId]
+            });
+
+        } else {
+    // Check if lecture is already completed
+            const alreadyCompleted =
+                courseProgress.completedLectures.some(
+                    id => id.toString() === lectureId.toString()
+                );
+
+            if (!alreadyCompleted) {
+                courseProgress.completedLectures.push(lectureId);
+            }
+        }
+
+        await student.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "Lecture marked as completed"
+        });
+
+    } catch (error) {
+        console.log("Complete lecture error:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Failed to complete lecture"
+        });
+    }
+};
+
+//-----------------------------
+// GET PROGRESS
+//-----------------------------
+
+export const getCourseProgress = async (req, res) => {
+    try {
+        const { courseId } = req.params;
+        const studentId = req.userId;
+
+        const student = await User.findById(studentId);
+
+        if (!student) {
+            return res.status(404).json({
+                success: false,
+                message: "Student not found"
+            });
+        }
+
+        const courseProgress = student.progress.find(
+            item => item.course.toString() === courseId.toString()
+        );
+
+        return res.status(200).json({
+            success: true,
+            completedLectures: courseProgress
+                ? courseProgress.completedLectures
+                : []
+        });
+
+    } catch (error) {
+        console.log("Get course progress error:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Failed to fetch course progress"
         });
     }
 };

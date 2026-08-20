@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ["student", "educator"],
       default: "student",
-      required : true,
+      required: true,
     },
 
     avatar: {
@@ -47,7 +47,22 @@ const userSchema = new mongoose.Schema(
     enrolledCourses: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: "Course"
-    }]
+    }],
+
+    progress: [
+      {
+        course: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Course"
+        },
+        completedLectures: [
+          {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Lecture"
+          }
+        ]
+      }
+    ]
   },
   {
     timestamps: true,
