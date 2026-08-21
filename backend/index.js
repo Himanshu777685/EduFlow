@@ -12,6 +12,8 @@ import paymentRouter from './routes/paymentRoute.js';
 dotenv.config()
 
 const app = express();
+
+app.set("trust proxy", 1);
 app.use(express.json());
 app.use(cookieParser());
 
@@ -20,7 +22,7 @@ connectDB();
 const port = process.env.PORT;
 
 app.use(cors({
-    origin : 'http://localhost:5173',
+    origin : 'https://edu-flow-five-murex.vercel.app',
     credentials : true
 
 }))

@@ -71,8 +71,8 @@ export const signup = async (req, res) => {
 
         res.cookie("token", token, {
             httpOnly: true,
-            secure: false,
-            sameSite: "Strict",
+            secure: true,
+            sameSite: "none",
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
 
@@ -151,8 +151,8 @@ export const login = async (req, res) => {
 
         res.cookie("token", token, {
             httpOnly: true,
-            secure: false,
-            sameSite: "Strict",
+            secure: true,
+            sameSite: "none",
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
 
@@ -186,6 +186,7 @@ export const logout = async (req, res) => {
         res.cookie("token", "", {
             expires: new Date(0),
             httpOnly: true,
+            secure: true,
         });
 
         res.status(200).json({
@@ -234,7 +235,7 @@ export const forget_password = async (req, res) => {
 
         await user.save();
 
-        const resetUrl = `http://localhost:5173/reset-password/${resetToken}`;
+        const resetUrl = `https://edu-flow-five-murex.vercel.app/reset-password/${resetToken}`;
 
         try {
             await sendMail(email, resetUrl);
@@ -337,8 +338,8 @@ export const googleAuth = async (req, res) => {
 
         res.cookie("token", token, {
             httpOnly: true,
-            secure: false,
-            sameSite: "Strict",
+            secure: true,
+            sameSite: "none",
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
 
