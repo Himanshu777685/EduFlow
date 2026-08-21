@@ -91,6 +91,7 @@ export const getCreatorCourse = async (req, res) => {
 export const editCourse = async (req, res) => {
     try {
         const { courseId } = req.params;
+        const userId = req.userId;
 
         const { title, subTitle, description, category, level, price } = req.body;
 
@@ -318,6 +319,13 @@ export const freeCourseEnrollment = async (req, res) => {
             });
         }
 
+        if (course.price && course.price > 0) {
+            return res.status(400).json({
+                success: false,
+                message: "This is a paid course"
+            });
+        }
+
         if (!course.enrolledStudent.includes(req.userId)) {
 
             course.enrolledStudent.push(req.userId);
@@ -325,12 +333,7 @@ export const freeCourseEnrollment = async (req, res) => {
             await course.save();
         }
 
-        if (course.price && course.price > 0) {
-            return res.status(400).json({
-                success: false,
-                message: "This is a paid course"
-            });
-        }
+        
 
         const user = await User.findById(req.userId);
 
