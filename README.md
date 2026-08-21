@@ -215,8 +215,6 @@ Main API groups include:
 /api/payment
 ```
 
-Detailed endpoint documentation is available in [API.md](./API.md).
-
 ## Project Structure
 
 ```text
