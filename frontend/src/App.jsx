@@ -25,6 +25,7 @@ import Lecture from './pages/Lecture'
 import StudentCourse from './pages/StudentCourse'
 import StudentLecture from './pages/StudentLecture'
 import MyCourse from './pages/MyCourse'
+import Footer from './pages/Footer'
 
 
 const App = () => {
@@ -89,6 +90,8 @@ const App = () => {
         />
 
       </Routes>
+
+      <Footer/>
     </>
   )
 }

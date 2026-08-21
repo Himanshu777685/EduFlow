@@ -208,6 +208,14 @@ const StudentCourse = () => {
 
 
     const handlePayment = async () => {
+
+        // Check login before creating Razorpay order
+        if (!user?.user?._id) {
+            toast.error("Please login to enroll in this course");
+            navigate("/login");
+            return;
+        }
+
         try {
             setLoading(true);
 
