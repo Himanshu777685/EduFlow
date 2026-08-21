@@ -382,7 +382,7 @@ Payments  → Razorpay
 ## Documentation
 
 * [Architecture Documentation](./architecture.md)
-* [API Documentation](./API.md)
+
 
 ## Project Status
 
