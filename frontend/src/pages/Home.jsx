@@ -1,6 +1,7 @@
 import React from 'react'
 import Nav from '../components/Nav'
 import Hero from '../components/Hero'
+import Footer from './Footer'
 
 const Home = () => {
   return (
@@ -9,6 +10,8 @@ const Home = () => {
         <Nav/>
         <Hero/>
       </div>
+
+      <Footer/>
       
     </div>
   )
