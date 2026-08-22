@@ -21,7 +21,7 @@ const Hero = () => {
 
       {/* ================= HERO ================= */}
       <main id="home">
-        <section className="relative max-w-7xl mx-auto px-6 md:px-10 lg:px-16 pt-12 md:pt-20 pb-20">
+        <section className="relative max-w-7xl mx-auto px-6 md:px-10 lg:px-16 pt-20 lg:pt-18 pb-20">
           
           {/* Background blur decorations */}
           <div className="absolute -top-20 -left-20 w-72 h-72 bg-indigo-200/30 rounded-full blur-3xl pointer-events-none" />

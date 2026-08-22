@@ -309,8 +309,18 @@ export const freeCourseEnrollment = async (req, res) => {
     try {
 
         const { courseId } = req.params;
-
+        const userId = req.userId;
+        
         const course = await Course.findById(courseId);
+
+        const user = await User.findById(req.userId);
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
 
         if (!course) {
             return res.status(400).json({
@@ -318,6 +328,8 @@ export const freeCourseEnrollment = async (req, res) => {
                 message: "Course not found"
             });
         }
+
+
 
         if (course.price && course.price > 0) {
             return res.status(400).json({
@@ -333,16 +345,9 @@ export const freeCourseEnrollment = async (req, res) => {
             await course.save();
         }
 
-        
 
-        const user = await User.findById(req.userId);
 
-        if (!user) {
-            return res.status(404).json({
-                success: false,
-                message: "User not found"
-            });
-        }
+
 
         if (!user.enrolledCourses.includes(courseId)) {
             user.enrolledCourses.push(courseId);
@@ -366,7 +371,7 @@ export const freeCourseEnrollment = async (req, res) => {
     }
 }
 
-  
+
 
 export const getMyCourses = async (req, res) => {
     try {

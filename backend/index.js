@@ -22,7 +22,8 @@ connectDB();
 const port = process.env.PORT;
 
 app.use(cors({
-    origin : 'https://edu-flow-five-murex.vercel.app',
+     origin : 'https://edu-flow-five-murex.vercel.app',
+    //  origin : "http://localhost:5173",
     credentials : true
 
 }))

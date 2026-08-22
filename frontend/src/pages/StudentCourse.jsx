@@ -325,10 +325,14 @@ const StudentCourse = () => {
     };
 
     const handleFreeEnrollment = async () => {
+        if (!user?.user?._id) {
+            toast.error("Please login to enroll in this course");
+            navigate("/login");
+            return;
+        }
         try {
             setLoading(true);
             const result = await axios.put(`${serverURL}/api/course/${courseId}/freeCourseEnrollment`, {}, { withCredentials: true });
-
             console.log(result.data);
 
             if (result.data.success) {
@@ -573,98 +577,106 @@ const StudentCourse = () => {
 
                 <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden">
 
-                    {lectures?.length > 0 ? (
+                    {
+                        !user ? (
 
-                        lectures.map((lecture, index) => (
-
-                            <div
-                                key={lecture._id || index}
-                                className="flex items-center gap-4 px-5 py-4 border-b last:border-b-0 border-gray-100"
-                            >
-
-                                {/* NUMBER */}
-
-                                <div className="w-9 h-9 rounded-lg bg-gray-100 flex items-center justify-center shrink-0">
-
-                                    <span className="text-sm font-semibold text-gray-600">
-                                        {String(index + 1).padStart(2, "0")}
-                                    </span>
-
-                                </div>
-
-
-                                {/* LECTURE INFO */}
-
-                                <div className="flex-1 min-w-0 cursor-pointer" onClick={() => handleOpenLecture(lecture)}>
-
-                                    <h3 className="text-sm font-medium text-gray-900 truncate">
-                                        {lecture.title}
-                                    </h3>
-
-                                    <p className="text-xs text-gray-400 mt-1">
-                                        Lecture {index + 1}
-                                    </p>
-
-                                </div>
-
-                                <div className='text-sm text-gray-400 flex justify-center items-center gap-2 '>
-                                    <BookOpen size={18} className='text-gray-400' />
-                                    {lecture.resources.length} document
-                                </div>
-
-                                {isLectureCompleted(lecture._id) ? (
-
-                                    <span className="text-xs font-medium text-green-600 bg-green-50 px-3 py-1.5 rounded-full whitespace-nowrap">
-                                        ✓ Completed
-                                    </span>
-
-                                ) : (
-
-                                    (isFree || lecture.isPreviewFree || isEnrolled) && (
-
-                                        <button
-                                            onClick={() => handleCompleteLecture(lecture._id)}
-                                            disabled={completingLecture === lecture._id}
-                                            className="text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-full whitespace-nowrap transition disabled:opacity-50"
-                                        >
-                                            {completingLecture === lecture._id
-                                                ? "Saving..."
-                                                : "Mark Complete"
-                                            }
-                                        </button>
-
-                                    )
-                                )}
-
-                                {/* ACCESS ICON */}
-
-                                {(isFree || lecture.isPreviewFree || isEnrolled) ? (
-
-                                    <PlayCircle
-                                        size={19}
-                                        className="text-green-600 shrink-0"
-                                    />
-
-                                ) : (
-
-                                    <Lock
-                                        size={17}
-                                        className="text-gray-400 shrink-0"
-                                    />
-
-                                )}
-
+                            <div className="py-12 text-center text-gray-500">
+                                Please log in to see lectures.
                             </div>
 
-                        ))
+                        ) :
+                            lectures?.length > 0 ? (
 
-                    ) : (
+                                lectures.map((lecture, index) => (
 
-                        <div className="py-12 text-center text-gray-400">
-                            No lectures available yet.
-                        </div>
+                                    <div
+                                        key={lecture._id || index}
+                                        className="flex items-center gap-4 px-5 py-4 border-b last:border-b-0 border-gray-100"
+                                    >
 
-                    )}
+                                        {/* NUMBER */}
+
+                                        <div className="w-9 h-9 rounded-lg bg-gray-100 flex items-center justify-center shrink-0">
+
+                                            <span className="text-sm font-semibold text-gray-600">
+                                                {String(index + 1).padStart(2, "0")}
+                                            </span>
+
+                                        </div>
+
+
+                                        {/* LECTURE INFO */}
+
+                                        <div className="flex-1 min-w-0 cursor-pointer" onClick={() => handleOpenLecture(lecture)}>
+
+                                            <h3 className="text-sm font-medium text-gray-900 truncate">
+                                                {lecture.title}
+                                            </h3>
+
+                                            <p className="text-xs text-gray-400 mt-1">
+                                                Lecture {index + 1}
+                                            </p>
+
+                                        </div>
+
+                                        <div className='text-sm text-gray-400 flex justify-center items-center gap-2 '>
+                                            <BookOpen size={18} className='text-gray-400' />
+                                            {lecture.resources.length} document
+                                        </div>
+
+                                        {isLectureCompleted(lecture._id) ? (
+
+                                            <span className="text-xs font-medium text-green-600 bg-green-50 px-3 py-1.5 rounded-full whitespace-nowrap">
+                                                ✓ Completed
+                                            </span>
+
+                                        ) : (
+
+                                            (isFree || lecture.isPreviewFree || isEnrolled) && (
+
+                                                <button
+                                                    onClick={() => handleCompleteLecture(lecture._id)}
+                                                    disabled={completingLecture === lecture._id}
+                                                    className="text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-full whitespace-nowrap transition disabled:opacity-50"
+                                                >
+                                                    {completingLecture === lecture._id
+                                                        ? "Saving..."
+                                                        : "Mark Complete"
+                                                    }
+                                                </button>
+
+                                            )
+                                        )}
+
+                                        {/* ACCESS ICON */}
+
+                                        {(isFree || lecture.isPreviewFree || isEnrolled) ? (
+
+                                            <PlayCircle
+                                                size={19}
+                                                className="text-green-600 shrink-0"
+                                            />
+
+                                        ) : (
+
+                                            <Lock
+                                                size={17}
+                                                className="text-gray-400 shrink-0"
+                                            />
+
+                                        )}
+
+                                    </div>
+
+                                ))
+
+                            ) : (
+
+                                <div className="py-12 text-center text-gray-400">
+                                    No lectures available yet.
+                                </div>
+
+                            )}
 
                 </div>
 

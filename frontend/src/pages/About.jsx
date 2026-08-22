@@ -13,6 +13,7 @@ import {
     BarChart3,
 } from "lucide-react";
 import Nav from "../components/Nav";
+import Footer from "./Footer";
 
 const About = () => {
 
@@ -449,6 +450,8 @@ const About = () => {
                 </div>
 
             </section>
+
+            <Footer/>
 
         </div>
     );
